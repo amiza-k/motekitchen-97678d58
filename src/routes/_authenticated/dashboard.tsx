@@ -27,7 +27,7 @@ type CatalogItem = { id: string; name: string; unit: string };
 function DashboardPage() {
   const qc = useQueryClient();
   const { data: profile } = useQuery({
-    queryKey: ["me"],
+    queryKey: ["me-dept"],
     queryFn: async (): Promise<Profile | null> => {
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) return null;

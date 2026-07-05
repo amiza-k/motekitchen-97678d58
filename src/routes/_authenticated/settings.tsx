@@ -25,7 +25,7 @@ type Item = { id: string; name: string; unit: string; department_id: string };
 function SettingsPage() {
   const qc = useQueryClient();
   const { data: profile } = useQuery({
-    queryKey: ["me"],
+    queryKey: ["me-owner"],
     queryFn: async (): Promise<Profile | null> => {
       const { data: u } = await supabase.auth.getUser();
       const { data } = await supabase.from("profiles").select("id,org_id,is_owner").eq("id", u.user!.id).maybeSingle();
