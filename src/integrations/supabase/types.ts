@@ -91,6 +91,8 @@ export type Database = {
           department_id: string | null
           email: string
           id: string
+          invited_by: string | null
+          invited_by_name: string | null
           is_purchaser: boolean
           org_id: string
         }
@@ -99,6 +101,8 @@ export type Database = {
           department_id?: string | null
           email: string
           id?: string
+          invited_by?: string | null
+          invited_by_name?: string | null
           is_purchaser?: boolean
           org_id: string
         }
@@ -107,6 +111,8 @@ export type Database = {
           department_id?: string | null
           email?: string
           id?: string
+          invited_by?: string | null
+          invited_by_name?: string | null
           is_purchaser?: boolean
           org_id?: string
         }
@@ -116,6 +122,13 @@ export type Database = {
             columns: ["department_id"]
             isOneToOne: false
             referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invitations_invited_by_fkey"
+            columns: ["invited_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {
@@ -340,6 +353,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_invitation: {
+        Args: { _invitation_id: string }
+        Returns: undefined
+      }
       current_department_id: { Args: never; Returns: string }
       current_is_owner: { Args: never; Returns: boolean }
       current_is_purchaser: { Args: never; Returns: boolean }
