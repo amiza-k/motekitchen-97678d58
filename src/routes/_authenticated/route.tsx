@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { LayoutList, ShoppingCart, History, Settings, LogOut, UtensilsCrossed, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { MyInvitations } from "@/components/MyInvitations";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
