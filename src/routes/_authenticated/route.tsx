@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { LayoutList, ShoppingCart, History, Settings, LogOut, UtensilsCrossed, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { MyInvitations } from "@/components/MyInvitations";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -124,6 +125,7 @@ function AuthLayout() {
         )}
       </header>
       <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-6">
+        <MyInvitations />
         <Outlet />
       </main>
     </div>

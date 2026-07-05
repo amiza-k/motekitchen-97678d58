@@ -166,13 +166,17 @@ function StaffPanel({ depts, staff, invites, orgId, meId, qc }: {
   const [deptId, setDeptId] = useState("");
   const [isPurchaser, setIsPurchaser] = useState(false);
 
+  const me = staff.find(s => s.id === meId);
+
   const invite = useMutation({
     mutationFn: async () => {
       if (!email.trim() || !deptId) throw new Error("ایمیل و بخش را وارد کنید");
       const { error } = await supabase.from("invitations").insert({
         org_id: orgId, email: email.trim().toLowerCase(),
         department_id: deptId, is_purchaser: isPurchaser,
-      });
+        invited_by: meId,
+        invited_by_name: me?.full_name || me?.email || null,
+      } as never);
       if (error) throw error;
     },
     onSuccess: () => {
