@@ -328,6 +328,27 @@ function CatalogPanel({ depts, orgId }: { depts: Dept[]; orgId: string }) {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["catalog-all", current] }),
   });
 
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editUnit, setEditUnit] = useState("");
+
+  const update = useMutation({
+    mutationFn: async () => {
+      if (!editingId) return;
+      if (!editName.trim() || !editUnit.trim()) throw new Error("اطلاعات ناقص");
+      const { error } = await supabase.from("catalog_items")
+        .update({ name: editName.trim(), unit: editUnit.trim() })
+        .eq("id", editingId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["catalog-all", current] });
+      setEditingId(null);
+      toast.success("ذخیره شد");
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
   if (depts.length === 0) {
     return <Card className="p-6 text-center text-muted-foreground">ابتدا یک بخش بسازید</Card>;
   }
@@ -362,11 +383,31 @@ function CatalogPanel({ depts, orgId }: { depts: Dept[]; orgId: string }) {
         <ul className="divide-y">
           {items.map(i => (
             <li key={i.id} className="py-2 flex items-center gap-3">
-              <span className="flex-1">{i.name}</span>
-              <span className="text-sm text-muted-foreground">{i.unit}</span>
-              <Button size="icon" variant="ghost" onClick={() => del.mutate(i.id)}>
-                <Trash2 className="h-4 w-4" />
-              </Button>
+              {editingId === i.id ? (
+                <>
+                  <Input value={editName} onChange={e => setEditName(e.target.value)} className="flex-1" placeholder="نام کالا" />
+                  <Input value={editUnit} onChange={e => setEditUnit(e.target.value)} className="w-32" placeholder="واحد" />
+                  <Button size="icon" onClick={() => update.mutate()} disabled={update.isPending}>
+                    <Check className="h-4 w-4" />
+                  </Button>
+                  <Button size="icon" variant="ghost" onClick={() => setEditingId(null)}>
+                    <X className="h-4 w-4" />
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <span className="flex-1">{i.name}</span>
+                  <span className="text-sm text-muted-foreground">{i.unit}</span>
+                  <Button size="icon" variant="ghost" onClick={() => {
+                    setEditingId(i.id); setEditName(i.name); setEditUnit(i.unit);
+                  }}>
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button size="icon" variant="ghost" onClick={() => del.mutate(i.id)}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </>
+              )}
             </li>
           ))}
         </ul>
@@ -374,3 +415,4 @@ function CatalogPanel({ depts, orgId }: { depts: Dept[]; orgId: string }) {
     </Card>
   );
 }
+
