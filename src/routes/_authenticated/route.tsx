@@ -2,8 +2,9 @@ import { createFileRoute, Outlet, redirect, Link, useNavigate, useRouterState } 
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { LayoutList, ShoppingCart, History, Settings, LogOut, UtensilsCrossed, Menu, X } from "lucide-react";
+import { LayoutList, ShoppingCart, History, Settings, LogOut, UtensilsCrossed, Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { MyInvitations } from "@/components/MyInvitations";
 
