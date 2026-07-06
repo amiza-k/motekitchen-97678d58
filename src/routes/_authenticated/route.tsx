@@ -104,10 +104,18 @@ function AuthLayout() {
             ))}
           </nav>
           <div className="flex items-center gap-2">
-            <div className="hidden sm:block text-xs text-muted-foreground">
-              {profile.full_name} {profile.departments && `· ${profile.departments.name}`}
-            </div>
-            <Button size="sm" variant="ghost" onClick={signOut}>
+            <Link
+              to="/profile"
+              className={cn(
+                "flex items-center gap-2 rounded-md px-2 py-1.5 hover:bg-accent text-sm",
+                pathname.startsWith("/profile") && "bg-accent"
+              )}
+            >
+              <User className="h-4 w-4 text-muted-foreground" />
+              <span className="hidden sm:inline">{profile.full_name || profile.email}</span>
+              <RoleBadge profile={profile} />
+            </Link>
+            <Button size="sm" variant="ghost" onClick={signOut} className="hidden sm:inline-flex">
               <LogOut className="h-4 w-4 ml-1" /> خروج
             </Button>
           </div>
