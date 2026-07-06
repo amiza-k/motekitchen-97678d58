@@ -77,9 +77,14 @@ export function MyInvitations() {
                 با پذیرش، به این رستوران منتقل می‌شوید. اگر رستوران فعلی شما بدون عضو دیگری باشد، حذف خواهد شد.
               </div>
             </div>
-            <Button size="sm" onClick={() => accept.mutate(inv.id)} disabled={accept.isPending}>
-              <Check className="h-4 w-4 ml-1" /> پذیرش دعوت
-            </Button>
+            <div className="flex gap-2">
+              <Button size="sm" onClick={() => accept.mutate(inv.id)} disabled={accept.isPending || decline.isPending}>
+                <Check className="h-4 w-4 ml-1" /> پذیرش دعوت
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => decline.mutate(inv.id)} disabled={accept.isPending || decline.isPending}>
+                <X className="h-4 w-4 ml-1" /> رد کردن دعوت
+              </Button>
+            </div>
           </div>
         </Card>
       ))}
