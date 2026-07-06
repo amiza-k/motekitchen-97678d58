@@ -2,8 +2,9 @@ import { createFileRoute, Outlet, redirect, Link, useNavigate, useRouterState } 
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { LayoutList, ShoppingCart, History, Settings, LogOut, UtensilsCrossed, Menu, X } from "lucide-react";
+import { LayoutList, ShoppingCart, History, Settings, LogOut, UtensilsCrossed, Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { MyInvitations } from "@/components/MyInvitations";
 
@@ -103,10 +104,18 @@ function AuthLayout() {
             ))}
           </nav>
           <div className="flex items-center gap-2">
-            <div className="hidden sm:block text-xs text-muted-foreground">
-              {profile.full_name} {profile.departments && `· ${profile.departments.name}`}
-            </div>
-            <Button size="sm" variant="ghost" onClick={signOut}>
+            <Link
+              to="/profile"
+              className={cn(
+                "flex items-center gap-2 rounded-md px-2 py-1.5 hover:bg-accent text-sm",
+                pathname.startsWith("/profile") && "bg-accent"
+              )}
+            >
+              <User className="h-4 w-4 text-muted-foreground" />
+              <span className="hidden sm:inline">{profile.full_name || profile.email}</span>
+              <RoleBadge profile={profile} />
+            </Link>
+            <Button size="sm" variant="ghost" onClick={signOut} className="hidden sm:inline-flex">
               <LogOut className="h-4 w-4 ml-1" /> خروج
             </Button>
           </div>
@@ -130,4 +139,13 @@ function AuthLayout() {
       </main>
     </div>
   );
+}
+
+function RoleBadge({ profile }: { profile: ProfileData }) {
+  let label = "";
+  if (profile.is_owner) label = "مالک";
+  else if (profile.is_purchaser) label = "مسئول خرید";
+  else if (profile.departments) label = profile.departments.name;
+  else label = "بدون نقش";
+  return <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{label}</Badge>;
 }
