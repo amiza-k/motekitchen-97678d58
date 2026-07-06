@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Mail, Check } from "lucide-react";
+import { Mail, Check, X } from "lucide-react";
 import { toast } from "sonner";
 
 type InviteForMe = {
@@ -42,6 +42,18 @@ export function MyInvitations() {
     onError: (e: any) => toast.error(e.message ?? "خطا در پذیرش"),
   });
 
+  const decline = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("invitations").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("دعوت رد شد");
+      qc.invalidateQueries({ queryKey: ["my-invitations"] });
+    },
+    onError: (e: any) => toast.error(e.message ?? "خطا در رد دعوت"),
+  });
+
   if (invites.length === 0) return null;
 
   return (
@@ -65,9 +77,14 @@ export function MyInvitations() {
                 با پذیرش، به این رستوران منتقل می‌شوید. اگر رستوران فعلی شما بدون عضو دیگری باشد، حذف خواهد شد.
               </div>
             </div>
-            <Button size="sm" onClick={() => accept.mutate(inv.id)} disabled={accept.isPending}>
-              <Check className="h-4 w-4 ml-1" /> پذیرش دعوت
-            </Button>
+            <div className="flex gap-2">
+              <Button size="sm" onClick={() => accept.mutate(inv.id)} disabled={accept.isPending || decline.isPending}>
+                <Check className="h-4 w-4 ml-1" /> پذیرش دعوت
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => decline.mutate(inv.id)} disabled={accept.isPending || decline.isPending}>
+                <X className="h-4 w-4 ml-1" /> رد کردن دعوت
+              </Button>
+            </div>
           </div>
         </Card>
       ))}
