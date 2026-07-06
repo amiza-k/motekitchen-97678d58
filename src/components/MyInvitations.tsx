@@ -42,6 +42,18 @@ export function MyInvitations() {
     onError: (e: any) => toast.error(e.message ?? "خطا در پذیرش"),
   });
 
+  const decline = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("invitations").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("دعوت رد شد");
+      qc.invalidateQueries({ queryKey: ["my-invitations"] });
+    },
+    onError: (e: any) => toast.error(e.message ?? "خطا در رد دعوت"),
+  });
+
   if (invites.length === 0) return null;
 
   return (
