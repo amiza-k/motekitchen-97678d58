@@ -51,10 +51,13 @@ function SettingsPage() {
   });
 
   const { data: invites = [] } = useQuery({
-    queryKey: ["invites"],
+    queryKey: ["invites", profile?.org_id],
+    enabled: !!profile?.org_id,
     queryFn: async (): Promise<Invite[]> => {
       const { data } = await supabase.from("invitations")
-        .select("id,email,department_id,is_purchaser").order("created_at", { ascending: false });
+        .select("id,email,department_id,is_purchaser")
+        .eq("org_id", profile!.org_id)
+        .order("created_at", { ascending: false });
       return (data ?? []) as Invite[];
     },
   });
