@@ -140,3 +140,12 @@ function AuthLayout() {
     </div>
   );
 }
+
+function RoleBadge({ profile }: { profile: ProfileData }) {
+  let label = "";
+  if (profile.is_owner) label = "مالک";
+  else if (profile.is_purchaser) label = "مسئول خرید";
+  else if (profile.departments) label = profile.departments.name;
+  else label = "بدون نقش";
+  return <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{label}</Badge>;
+}
