@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { MyInvitations } from "@/components/MyInvitations";
+import { CreateOrganization } from "@/components/CreateOrganization";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -67,7 +68,7 @@ function AuthLayout() {
     return <div className="min-h-screen grid place-items-center text-muted-foreground">پروفایل یافت نشد</div>;
   }
 
-  const nav = [
+  const nav = !profile.org_id ? [] : [
     { to: "/dashboard", label: "لیست خرید بخش", icon: LayoutList, show: !!profile.department_id },
     { to: "/purchaser", label: "میز مسئول خرید", icon: ShoppingCart, show: profile.is_purchaser || profile.is_owner },
     { to: "/history", label: "تاریخچه", icon: History, show: true },
@@ -84,9 +85,11 @@ function AuthLayout() {
             </button>
             <UtensilsCrossed className="h-5 w-5 text-primary shrink-0" />
             <span className="font-bold text-primary">MoteKitchen</span>
-            <span className="text-muted-foreground text-sm truncate hidden sm:inline">
-              — {profile.organizations?.name}
-            </span>
+            {profile.organizations?.name && (
+              <span className="text-muted-foreground text-sm truncate hidden sm:inline">
+                — {profile.organizations.name}
+              </span>
+            )}
           </div>
           <nav className="hidden md:flex items-center gap-1">
             {nav.map(item => (
@@ -135,7 +138,7 @@ function AuthLayout() {
       </header>
       <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-6">
         <MyInvitations />
-        <Outlet />
+        {profile.org_id ? <Outlet /> : <CreateOrganization />}
       </main>
     </div>
   );
