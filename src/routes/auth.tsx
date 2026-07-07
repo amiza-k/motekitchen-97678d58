@@ -42,7 +42,7 @@ function AuthPage() {
           password,
           options: {
             emailRedirectTo: window.location.origin,
-            data: { full_name: fullName, org_name: orgName || "رستوران من" },
+            data: { full_name: fullName },
           },
         });
         if (error) throw error;
