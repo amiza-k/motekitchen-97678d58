@@ -85,9 +85,11 @@ function AuthLayout() {
             </button>
             <UtensilsCrossed className="h-5 w-5 text-primary shrink-0" />
             <span className="font-bold text-primary">MoteKitchen</span>
-            <span className="text-muted-foreground text-sm truncate hidden sm:inline">
-              — {profile.organizations?.name}
-            </span>
+            {profile.organizations?.name && (
+              <span className="text-muted-foreground text-sm truncate hidden sm:inline">
+                — {profile.organizations.name}
+              </span>
+            )}
           </div>
           <nav className="hidden md:flex items-center gap-1">
             {nav.map(item => (
