@@ -142,22 +142,31 @@ export type Database = {
       }
       organizations: {
         Row: {
+          address: string | null
+          city: string | null
           created_at: string
           id: string
           name: string
           owner_id: string
+          province: string | null
         }
         Insert: {
+          address?: string | null
+          city?: string | null
           created_at?: string
           id?: string
           name: string
           owner_id: string
+          province?: string | null
         }
         Update: {
+          address?: string | null
+          city?: string | null
           created_at?: string
           id?: string
           name?: string
           owner_id?: string
+          province?: string | null
         }
         Relationships: []
       }
@@ -170,7 +179,7 @@ export type Database = {
           id: string
           is_owner: boolean
           is_purchaser: boolean
-          org_id: string
+          org_id: string | null
         }
         Insert: {
           created_at?: string
@@ -180,7 +189,7 @@ export type Database = {
           id: string
           is_owner?: boolean
           is_purchaser?: boolean
-          org_id: string
+          org_id?: string | null
         }
         Update: {
           created_at?: string
@@ -190,7 +199,7 @@ export type Database = {
           id?: string
           is_owner?: boolean
           is_purchaser?: boolean
-          org_id?: string
+          org_id?: string | null
         }
         Relationships: [
           {
@@ -356,6 +365,15 @@ export type Database = {
       accept_invitation: {
         Args: { _invitation_id: string }
         Returns: undefined
+      }
+      create_my_organization: {
+        Args: {
+          _address: string
+          _city: string
+          _name: string
+          _province: string
+        }
+        Returns: string
       }
       current_department_id: { Args: never; Returns: string }
       current_is_owner: { Args: never; Returns: boolean }
