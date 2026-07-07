@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { MyInvitations } from "@/components/MyInvitations";
+import { CreateOrganization } from "@/components/CreateOrganization";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
