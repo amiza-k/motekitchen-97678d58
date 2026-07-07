@@ -69,7 +69,7 @@ function AuthLayout() {
   }
 
   const nav = !profile.org_id ? [] : [
-    { to: "/dashboard", label: "لیست خرید بخش", icon: LayoutList, show: !!profile.department_id },
+    { to: "/dashboard", label: profile.is_owner ? "داشبورد" : "لیست خرید بخش", icon: LayoutList, show: profile.is_owner || !!profile.department_id },
     { to: "/purchaser", label: "میز مسئول خرید", icon: ShoppingCart, show: profile.is_purchaser || profile.is_owner },
     { to: "/history", label: "تاریخچه", icon: History, show: true },
     { to: "/settings", label: "مدیریت رستوران", icon: Settings, show: profile.is_owner },
