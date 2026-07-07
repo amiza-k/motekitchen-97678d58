@@ -70,27 +70,21 @@ function AuthPage() {
       <Card className="w-full max-w-md p-6 shadow-lg">
         <div className="mb-6 text-center">
           <h1 className="text-xl font-bold">
-            {mode === "signin" ? "ورود به حساب" : "ساخت رستوران جدید"}
+            {mode === "signin" ? "ورود به حساب" : "ثبت‌نام"}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             {mode === "signin"
               ? "با ایمیل و رمز عبور خود وارد شوید"
-              : "اولین کاربر ثبت‌نام کننده، مالک رستوران خواهد بود"}
+              : "پس از ثبت‌نام می‌توانید رستوران خود را بسازید یا دعوت‌نامه‌ای را بپذیرید"}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {mode === "signup" && (
-            <>
-              <div>
-                <Label htmlFor="fullName">نام و نام خانوادگی</Label>
-                <Input id="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
-              </div>
-              <div>
-                <Label htmlFor="orgName">نام رستوران / کافه</Label>
-                <Input id="orgName" value={orgName} onChange={(e) => setOrgName(e.target.value)} placeholder="مثلاً کافه ستاره" required />
-              </div>
-            </>
+            <div>
+              <Label htmlFor="fullName">نام و نام خانوادگی</Label>
+              <Input id="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+            </div>
           )}
           <div>
             <Label htmlFor="email">ایمیل</Label>
