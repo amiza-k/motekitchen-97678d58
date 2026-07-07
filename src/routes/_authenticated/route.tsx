@@ -136,7 +136,7 @@ function AuthLayout() {
       </header>
       <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-6">
         <MyInvitations />
-        <Outlet />
+        {profile.org_id ? <Outlet /> : <CreateOrganization />}
       </main>
     </div>
   );
