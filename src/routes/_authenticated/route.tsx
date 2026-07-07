@@ -68,7 +68,7 @@ function AuthLayout() {
     return <div className="min-h-screen grid place-items-center text-muted-foreground">پروفایل یافت نشد</div>;
   }
 
-  const nav = [
+  const nav = !profile.org_id ? [] : [
     { to: "/dashboard", label: "لیست خرید بخش", icon: LayoutList, show: !!profile.department_id },
     { to: "/purchaser", label: "میز مسئول خرید", icon: ShoppingCart, show: profile.is_purchaser || profile.is_owner },
     { to: "/history", label: "تاریخچه", icon: History, show: true },
