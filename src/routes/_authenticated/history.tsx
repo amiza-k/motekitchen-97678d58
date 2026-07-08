@@ -92,16 +92,16 @@ function HistoryPage() {
                 {filtered.length === 0 ? (
                   <p className="p-8 text-center text-sm text-muted-foreground">موردی نیست</p>
                 ) : (
-                  <table className="w-full text-sm">
-                    <thead className="bg-muted/50 text-right">
+                  <table className="w-full text-sm text-right" dir="rtl">
+                    <thead className="bg-muted/50">
                       <tr>
-                        <th className="p-3">کالا</th>
-                        <th className="p-3">درخواست</th>
-                        <th className="p-3">خریداری‌شده</th>
-                        <th className="p-3">وضعیت</th>
-                        <th className="p-3">تاریخ ثبت</th>
-                        <th className="p-3">تاریخ اقدام</th>
-                        <th className="p-3">توضیح</th>
+                        <th className="p-3 text-right">کالا</th>
+                        <th className="p-3 text-right">درخواست</th>
+                        <th className="p-3 text-right">خریداری‌شده</th>
+                        <th className="p-3 text-right">وضعیت</th>
+                        <th className="p-3 text-right">تاریخ ثبت</th>
+                        <th className="p-3 text-right">تاریخ اقدام</th>
+                        <th className="p-3 text-right">توضیح</th>
                       </tr>
                     </thead>
                     <tbody>
