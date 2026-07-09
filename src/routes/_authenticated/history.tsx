@@ -88,54 +88,112 @@ function HistoryPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <Card className="p-0 overflow-x-auto">
+              <Card className="p-0 overflow-hidden">
                 {filtered.length === 0 ? (
                   <p className="p-8 text-center text-sm text-muted-foreground">موردی نیست</p>
                 ) : (
-                  <table className="w-full text-sm text-right" dir="rtl">
-                    <thead className="bg-muted/50">
-                      <tr>
-                        <th className="p-3 text-right">کالا</th>
-                        <th className="p-3 text-right">درخواست</th>
-                        <th className="p-3 text-right">خریداری‌شده</th>
-                        <th className="p-3 text-right">وضعیت</th>
-                        <th className="p-3 text-right">تاریخ ثبت</th>
-                        <th className="p-3 text-right">تاریخ اقدام</th>
-                        <th className="p-3 text-right">توضیح</th>
-                      </tr>
-                    </thead>
-                    <tbody>
+                  <>
+                    {/* Desktop table */}
+                    <div className="hidden md:block overflow-x-auto">
+                      <table className="w-full text-sm text-right" dir="rtl">
+                        <thead className="bg-muted/50">
+                          <tr>
+                            <th className="p-3 text-right">کالا</th>
+                            <th className="p-3 text-right">درخواست</th>
+                            <th className="p-3 text-right">خریداری‌شده</th>
+                            <th className="p-3 text-right">وضعیت</th>
+                            <th className="p-3 text-right">تاریخ ثبت</th>
+                            <th className="p-3 text-right">تاریخ اقدام</th>
+                            <th className="p-3 text-right">توضیح</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filtered.map(t => {
+                            const diff = t.purchased_quantity != null && t.purchased_quantity !== t.requested_quantity;
+                            return (
+                              <tr key={t.id} className="border-t">
+                                <td className="p-3">
+                                  {t.item_name}
+                                  {t.is_custom && <span className="mr-2 text-xs bg-muted px-1.5 py-0.5 rounded">دلخواه</span>}
+                                </td>
+                                <td className="p-3" dir="ltr">{t.requested_quantity} {t.unit}</td>
+                                <td className="p-3" dir="ltr">
+                                  {t.purchased_quantity != null ? (
+                                    <span className={diff ? "text-warning-foreground font-medium" : ""}>
+                                      {t.purchased_quantity} {t.unit}
+                                    </span>
+                                  ) : "—"}
+                                </td>
+                                <td className="p-3">
+                                  {t.status === "purchased" ? (
+                                    <span className="text-primary">خریداری‌شده</span>
+                                  ) : (
+                                    <span className="text-destructive">ردشده</span>
+                                  )}
+                                </td>
+                                <td className="p-3 whitespace-nowrap">{fmt(t.order_date)}</td>
+                                <td className="p-3 whitespace-nowrap">{fmt(t.purchased_date)}</td>
+                                <td className="p-3 text-muted-foreground">{t.rejection_note || "—"}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* Mobile stacked cards */}
+                    <ul className="md:hidden divide-y" dir="rtl">
                       {filtered.map(t => {
                         const diff = t.purchased_quantity != null && t.purchased_quantity !== t.requested_quantity;
                         return (
-                          <tr key={t.id} className="border-t">
-                            <td className="p-3">
-                              {t.item_name}
-                              {t.is_custom && <span className="mr-2 text-xs bg-muted px-1.5 py-0.5 rounded">دلخواه</span>}
-                            </td>
-                            <td className="p-3" dir="ltr">{t.requested_quantity} {t.unit}</td>
-                            <td className="p-3" dir="ltr">
-                              {t.purchased_quantity != null ? (
-                                <span className={diff ? "text-warning-foreground font-medium" : ""}>
-                                  {t.purchased_quantity} {t.unit}
-                                </span>
-                              ) : "—"}
-                            </td>
-                            <td className="p-3">
-                              {t.status === "purchased" ? (
-                                <span className="text-primary">خریداری‌شده</span>
-                              ) : (
-                                <span className="text-destructive">ردشده</span>
-                              )}
-                            </td>
-                            <td className="p-3 whitespace-nowrap">{fmt(t.order_date)}</td>
-                            <td className="p-3 whitespace-nowrap">{fmt(t.purchased_date)}</td>
-                            <td className="p-3 text-muted-foreground">{t.rejection_note || "—"}</td>
-                          </tr>
+                          <li key={t.id} className="p-4 space-y-2 text-sm text-right">
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="min-w-0 flex-1">
+                                <div className="font-semibold truncate">
+                                  {t.item_name}
+                                  {t.is_custom && <span className="mr-2 text-xs bg-muted px-1.5 py-0.5 rounded">دلخواه</span>}
+                                </div>
+                              </div>
+                              <div className="shrink-0">
+                                {t.status === "purchased" ? (
+                                  <span className="text-xs text-primary bg-primary/10 px-2 py-0.5 rounded">خریداری‌شده</span>
+                                ) : (
+                                  <span className="text-xs text-destructive bg-destructive/10 px-2 py-0.5 rounded">ردشده</span>
+                                )}
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 text-xs">
+                              <div>
+                                <span className="text-muted-foreground">درخواست: </span>
+                                <span dir="ltr" className="inline-block">{t.requested_quantity} {t.unit}</span>
+                              </div>
+                              <div>
+                                <span className="text-muted-foreground">خریداری‌شده: </span>
+                                {t.purchased_quantity != null ? (
+                                  <span dir="ltr" className={"inline-block " + (diff ? "text-warning-foreground font-medium" : "")}>
+                                    {t.purchased_quantity} {t.unit}
+                                  </span>
+                                ) : "—"}
+                              </div>
+                              <div>
+                                <span className="text-muted-foreground">تاریخ ثبت: </span>
+                                <span className="whitespace-nowrap">{fmt(t.order_date)}</span>
+                              </div>
+                              <div>
+                                <span className="text-muted-foreground">تاریخ اقدام: </span>
+                                <span className="whitespace-nowrap">{fmt(t.purchased_date)}</span>
+                              </div>
+                            </div>
+                            {t.rejection_note && (
+                              <div className="text-xs text-muted-foreground pt-1 border-t">
+                                <span>توضیح: </span>{t.rejection_note}
+                              </div>
+                            )}
+                          </li>
                         );
                       })}
-                    </tbody>
-                  </table>
+                    </ul>
+                  </>
                 )}
               </Card>
             </TabsContent>
