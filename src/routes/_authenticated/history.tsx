@@ -93,18 +93,18 @@ function HistoryPage() {
                   <p className="p-8 text-center text-sm text-muted-foreground">موردی نیست</p>
                 ) : (
                   <>
-                    {/* Desktop table */}
-                    <div className="hidden md:block overflow-x-auto">
-                      <table className="w-full text-sm text-right" dir="rtl">
+                    {/* Desktop table — force LTR + reversed column source order so كالا always sits rightmost */}
+                    <div className="hidden md:block overflow-x-auto" dir="ltr">
+                      <table className="w-full text-sm" dir="ltr">
                         <thead className="bg-muted/50">
                           <tr>
+                            <th className="p-3 text-left">توضیح</th>
+                            <th className="p-3 text-left">تاریخ اقدام</th>
+                            <th className="p-3 text-left">تاریخ ثبت</th>
+                            <th className="p-3 text-left">وضعیت</th>
+                            <th className="p-3 text-left">خریداری‌شده</th>
+                            <th className="p-3 text-left">درخواست</th>
                             <th className="p-3 text-right">کالا</th>
-                            <th className="p-3 text-right">درخواست</th>
-                            <th className="p-3 text-right">خریداری‌شده</th>
-                            <th className="p-3 text-right">وضعیت</th>
-                            <th className="p-3 text-right">تاریخ ثبت</th>
-                            <th className="p-3 text-right">تاریخ اقدام</th>
-                            <th className="p-3 text-right">توضیح</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -112,34 +112,35 @@ function HistoryPage() {
                             const diff = t.purchased_quantity != null && t.purchased_quantity !== t.requested_quantity;
                             return (
                               <tr key={t.id} className="border-t">
-                                <td className="p-3">
-                                  {t.item_name}
-                                  {t.is_custom && <span className="mr-2 text-xs bg-muted px-1.5 py-0.5 rounded">دلخواه</span>}
-                                </td>
-                                <td className="p-3" dir="ltr">{t.requested_quantity} {t.unit}</td>
-                                <td className="p-3" dir="ltr">
-                                  {t.purchased_quantity != null ? (
-                                    <span className={diff ? "text-warning-foreground font-medium" : ""}>
-                                      {t.purchased_quantity} {t.unit}
-                                    </span>
-                                  ) : "—"}
-                                </td>
-                                <td className="p-3">
+                                <td className="p-3 text-left text-muted-foreground">{t.rejection_note || "—"}</td>
+                                <td className="p-3 text-left whitespace-nowrap">{fmt(t.purchased_date)}</td>
+                                <td className="p-3 text-left whitespace-nowrap">{fmt(t.order_date)}</td>
+                                <td className="p-3 text-left">
                                   {t.status === "purchased" ? (
                                     <span className="text-primary">خریداری‌شده</span>
                                   ) : (
                                     <span className="text-destructive">ردشده</span>
                                   )}
                                 </td>
-                                <td className="p-3 whitespace-nowrap">{fmt(t.order_date)}</td>
-                                <td className="p-3 whitespace-nowrap">{fmt(t.purchased_date)}</td>
-                                <td className="p-3 text-muted-foreground">{t.rejection_note || "—"}</td>
+                                <td className="p-3 text-left" dir="ltr">
+                                  {t.purchased_quantity != null ? (
+                                    <span className={diff ? "text-warning-foreground font-medium" : ""}>
+                                      {t.purchased_quantity} {t.unit}
+                                    </span>
+                                  ) : "—"}
+                                </td>
+                                <td className="p-3 text-left" dir="ltr">{t.requested_quantity} {t.unit}</td>
+                                <td className="p-3 text-right">
+                                  {t.item_name}
+                                  {t.is_custom && <span className="ml-2 text-xs bg-muted px-1.5 py-0.5 rounded">دلخواه</span>}
+                                </td>
                               </tr>
                             );
                           })}
                         </tbody>
                       </table>
                     </div>
+
 
                     {/* Mobile stacked cards */}
                     <ul className="md:hidden divide-y" dir="rtl">
