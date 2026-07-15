@@ -12,9 +12,37 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedTest_edit_part1RouteImport } from './routes/_authenticated/test_edit_part1'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedPurchaser_temp_verifyRouteImport } from './routes/_authenticated/purchaser_temp_verify'
+import { Route as AuthenticatedPurchaser_tempRouteImport } from './routes/_authenticated/purchaser_temp'
+import { Route as AuthenticatedPurchaser_staging_workRouteImport } from './routes/_authenticated/purchaser_staging_work'
+import { Route as AuthenticatedPurchaser_stageRouteImport } from './routes/_authenticated/purchaser_stage'
+import { Route as AuthenticatedPurchaser_sourceRouteImport } from './routes/_authenticated/purchaser_source'
+import { Route as AuthenticatedPurchaser_refRouteImport } from './routes/_authenticated/purchaser_ref'
+import { Route as AuthenticatedPurchaser_preRouteImport } from './routes/_authenticated/purchaser_pre'
+import { Route as AuthenticatedPurchaser_line_edit_currentRouteImport } from './routes/_authenticated/purchaser_line_edit_current'
+import { Route as AuthenticatedPurchaser_edit_flowRouteImport } from './routes/_authenticated/purchaser_edit_flow'
+import { Route as AuthenticatedPurchaser_editRouteImport } from './routes/_authenticated/purchaser_edit'
+import { Route as AuthenticatedPurchaser_draftRouteImport } from './routes/_authenticated/purchaser_draft'
+import { Route as AuthenticatedPurchaser_current_line_test9RouteImport } from './routes/_authenticated/purchaser_current_line_test9'
+import { Route as AuthenticatedPurchaser_current_line_test6RouteImport } from './routes/_authenticated/purchaser_current_line_test6'
+import { Route as AuthenticatedPurchaser_current_line_test5RouteImport } from './routes/_authenticated/purchaser_current_line_test5'
+import { Route as AuthenticatedPurchaser_current_line_test4RouteImport } from './routes/_authenticated/purchaser_current_line_test4'
+import { Route as AuthenticatedPurchaser_current_line_test2RouteImport } from './routes/_authenticated/purchaser_current_line_test2'
+import { Route as AuthenticatedPurchaser_current_line_test18RouteImport } from './routes/_authenticated/purchaser_current_line_test18'
+import { Route as AuthenticatedPurchaser_current_line_test17RouteImport } from './routes/_authenticated/purchaser_current_line_test17'
+import { Route as AuthenticatedPurchaser_current_line_modRouteImport } from './routes/_authenticated/purchaser_current_line_mod'
+import { Route as AuthenticatedPurchaser_current_line_final2RouteImport } from './routes/_authenticated/purchaser_current_line_final2'
+import { Route as AuthenticatedPurchaser_current_line_finalRouteImport } from './routes/_authenticated/purchaser_current_line_final'
+import { Route as AuthenticatedPurchaser_current_lineRouteImport } from './routes/_authenticated/purchaser_current_line'
+import { Route as AuthenticatedPurchaser_current_buildRouteImport } from './routes/_authenticated/purchaser_current_build'
+import { Route as AuthenticatedPurchaser_currentRouteImport } from './routes/_authenticated/purchaser_current'
+import { Route as AuthenticatedPurchaser_cleanRouteImport } from './routes/_authenticated/purchaser_clean'
+import { Route as AuthenticatedPurchaser_before_batchRouteImport } from './routes/_authenticated/purchaser_before_batch'
 import { Route as AuthenticatedPurchaserRouteImport } from './routes/_authenticated/purchaser'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedHistory_staging_workRouteImport } from './routes/_authenticated/history_staging_work'
 import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticated/history'
 import { Route as AuthenticatedDashboard_test_editRouteImport } from './routes/_authenticated/dashboard_test_edit'
 import { Route as AuthenticatedDashboard_test1RouteImport } from './routes/_authenticated/dashboard_test1'
@@ -22,6 +50,9 @@ import { Route as AuthenticatedDashboard_testRouteImport } from './routes/_authe
 import { Route as AuthenticatedDashboard_stagingRouteImport } from './routes/_authenticated/dashboard_staging'
 import { Route as AuthenticatedDashboard_modRouteImport } from './routes/_authenticated/dashboard_mod'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedPurchaserRef_verifyRouteImport } from './routes/_authenticated/purchaser.ref_verify'
+import { Route as AuthenticatedPurchaserCopyRouteImport } from './routes/_authenticated/purchaser.copy'
+import { Route as AuthenticatedHistoryCopyRouteImport } from './routes/_authenticated/history.copy'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -37,11 +68,173 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedTest_edit_part1Route =
+  AuthenticatedTest_edit_part1RouteImport.update({
+    id: '/test_edit_part1',
+    path: '/test_edit_part1',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPurchaser_temp_verifyRoute =
+  AuthenticatedPurchaser_temp_verifyRouteImport.update({
+    id: '/purchaser_temp_verify',
+    path: '/purchaser_temp_verify',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_tempRoute =
+  AuthenticatedPurchaser_tempRouteImport.update({
+    id: '/purchaser_temp',
+    path: '/purchaser_temp',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_staging_workRoute =
+  AuthenticatedPurchaser_staging_workRouteImport.update({
+    id: '/purchaser_staging_work',
+    path: '/purchaser_staging_work',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_stageRoute =
+  AuthenticatedPurchaser_stageRouteImport.update({
+    id: '/purchaser_stage',
+    path: '/purchaser_stage',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_sourceRoute =
+  AuthenticatedPurchaser_sourceRouteImport.update({
+    id: '/purchaser_source',
+    path: '/purchaser_source',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_refRoute =
+  AuthenticatedPurchaser_refRouteImport.update({
+    id: '/purchaser_ref',
+    path: '/purchaser_ref',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_preRoute =
+  AuthenticatedPurchaser_preRouteImport.update({
+    id: '/purchaser_pre',
+    path: '/purchaser_pre',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_line_edit_currentRoute =
+  AuthenticatedPurchaser_line_edit_currentRouteImport.update({
+    id: '/purchaser_line_edit_current',
+    path: '/purchaser_line_edit_current',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_edit_flowRoute =
+  AuthenticatedPurchaser_edit_flowRouteImport.update({
+    id: '/purchaser_edit_flow',
+    path: '/purchaser_edit_flow',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_editRoute =
+  AuthenticatedPurchaser_editRouteImport.update({
+    id: '/purchaser_edit',
+    path: '/purchaser_edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_draftRoute =
+  AuthenticatedPurchaser_draftRouteImport.update({
+    id: '/purchaser_draft',
+    path: '/purchaser_draft',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_current_line_test9Route =
+  AuthenticatedPurchaser_current_line_test9RouteImport.update({
+    id: '/purchaser_current_line_test9',
+    path: '/purchaser_current_line_test9',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_current_line_test6Route =
+  AuthenticatedPurchaser_current_line_test6RouteImport.update({
+    id: '/purchaser_current_line_test6',
+    path: '/purchaser_current_line_test6',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_current_line_test5Route =
+  AuthenticatedPurchaser_current_line_test5RouteImport.update({
+    id: '/purchaser_current_line_test5',
+    path: '/purchaser_current_line_test5',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_current_line_test4Route =
+  AuthenticatedPurchaser_current_line_test4RouteImport.update({
+    id: '/purchaser_current_line_test4',
+    path: '/purchaser_current_line_test4',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_current_line_test2Route =
+  AuthenticatedPurchaser_current_line_test2RouteImport.update({
+    id: '/purchaser_current_line_test2',
+    path: '/purchaser_current_line_test2',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_current_line_test18Route =
+  AuthenticatedPurchaser_current_line_test18RouteImport.update({
+    id: '/purchaser_current_line_test18',
+    path: '/purchaser_current_line_test18',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_current_line_test17Route =
+  AuthenticatedPurchaser_current_line_test17RouteImport.update({
+    id: '/purchaser_current_line_test17',
+    path: '/purchaser_current_line_test17',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_current_line_modRoute =
+  AuthenticatedPurchaser_current_line_modRouteImport.update({
+    id: '/purchaser_current_line_mod',
+    path: '/purchaser_current_line_mod',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_current_line_final2Route =
+  AuthenticatedPurchaser_current_line_final2RouteImport.update({
+    id: '/purchaser_current_line_final2',
+    path: '/purchaser_current_line_final2',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_current_line_finalRoute =
+  AuthenticatedPurchaser_current_line_finalRouteImport.update({
+    id: '/purchaser_current_line_final',
+    path: '/purchaser_current_line_final',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_current_lineRoute =
+  AuthenticatedPurchaser_current_lineRouteImport.update({
+    id: '/purchaser_current_line',
+    path: '/purchaser_current_line',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_current_buildRoute =
+  AuthenticatedPurchaser_current_buildRouteImport.update({
+    id: '/purchaser_current_build',
+    path: '/purchaser_current_build',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_currentRoute =
+  AuthenticatedPurchaser_currentRouteImport.update({
+    id: '/purchaser_current',
+    path: '/purchaser_current',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_cleanRoute =
+  AuthenticatedPurchaser_cleanRouteImport.update({
+    id: '/purchaser_clean',
+    path: '/purchaser_clean',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPurchaser_before_batchRoute =
+  AuthenticatedPurchaser_before_batchRouteImport.update({
+    id: '/purchaser_before_batch',
+    path: '/purchaser_before_batch',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedPurchaserRoute = AuthenticatedPurchaserRouteImport.update({
   id: '/purchaser',
   path: '/purchaser',
@@ -52,6 +245,12 @@ const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedHistory_staging_workRoute =
+  AuthenticatedHistory_staging_workRouteImport.update({
+    id: '/history_staging_work',
+    path: '/history_staging_work',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedHistoryRoute = AuthenticatedHistoryRouteImport.update({
   id: '/history',
   path: '/history',
@@ -92,6 +291,24 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPurchaserRef_verifyRoute =
+  AuthenticatedPurchaserRef_verifyRouteImport.update({
+    id: '/ref_verify',
+    path: '/ref_verify',
+    getParentRoute: () => AuthenticatedPurchaserRoute,
+  } as any)
+const AuthenticatedPurchaserCopyRoute =
+  AuthenticatedPurchaserCopyRouteImport.update({
+    id: '/copy',
+    path: '/copy',
+    getParentRoute: () => AuthenticatedPurchaserRoute,
+  } as any)
+const AuthenticatedHistoryCopyRoute =
+  AuthenticatedHistoryCopyRouteImport.update({
+    id: '/copy',
+    path: '/copy',
+    getParentRoute: () => AuthenticatedHistoryRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -102,10 +319,41 @@ export interface FileRoutesByFullPath {
   '/dashboard_test': typeof AuthenticatedDashboard_testRoute
   '/dashboard_test1': typeof AuthenticatedDashboard_test1Route
   '/dashboard_test_edit': typeof AuthenticatedDashboard_test_editRoute
-  '/history': typeof AuthenticatedHistoryRoute
+  '/history': typeof AuthenticatedHistoryRouteWithChildren
+  '/history_staging_work': typeof AuthenticatedHistory_staging_workRoute
   '/profile': typeof AuthenticatedProfileRoute
-  '/purchaser': typeof AuthenticatedPurchaserRoute
+  '/purchaser': typeof AuthenticatedPurchaserRouteWithChildren
+  '/purchaser_before_batch': typeof AuthenticatedPurchaser_before_batchRoute
+  '/purchaser_clean': typeof AuthenticatedPurchaser_cleanRoute
+  '/purchaser_current': typeof AuthenticatedPurchaser_currentRoute
+  '/purchaser_current_build': typeof AuthenticatedPurchaser_current_buildRoute
+  '/purchaser_current_line': typeof AuthenticatedPurchaser_current_lineRoute
+  '/purchaser_current_line_final': typeof AuthenticatedPurchaser_current_line_finalRoute
+  '/purchaser_current_line_final2': typeof AuthenticatedPurchaser_current_line_final2Route
+  '/purchaser_current_line_mod': typeof AuthenticatedPurchaser_current_line_modRoute
+  '/purchaser_current_line_test17': typeof AuthenticatedPurchaser_current_line_test17Route
+  '/purchaser_current_line_test18': typeof AuthenticatedPurchaser_current_line_test18Route
+  '/purchaser_current_line_test2': typeof AuthenticatedPurchaser_current_line_test2Route
+  '/purchaser_current_line_test4': typeof AuthenticatedPurchaser_current_line_test4Route
+  '/purchaser_current_line_test5': typeof AuthenticatedPurchaser_current_line_test5Route
+  '/purchaser_current_line_test6': typeof AuthenticatedPurchaser_current_line_test6Route
+  '/purchaser_current_line_test9': typeof AuthenticatedPurchaser_current_line_test9Route
+  '/purchaser_draft': typeof AuthenticatedPurchaser_draftRoute
+  '/purchaser_edit': typeof AuthenticatedPurchaser_editRoute
+  '/purchaser_edit_flow': typeof AuthenticatedPurchaser_edit_flowRoute
+  '/purchaser_line_edit_current': typeof AuthenticatedPurchaser_line_edit_currentRoute
+  '/purchaser_pre': typeof AuthenticatedPurchaser_preRoute
+  '/purchaser_ref': typeof AuthenticatedPurchaser_refRoute
+  '/purchaser_source': typeof AuthenticatedPurchaser_sourceRoute
+  '/purchaser_stage': typeof AuthenticatedPurchaser_stageRoute
+  '/purchaser_staging_work': typeof AuthenticatedPurchaser_staging_workRoute
+  '/purchaser_temp': typeof AuthenticatedPurchaser_tempRoute
+  '/purchaser_temp_verify': typeof AuthenticatedPurchaser_temp_verifyRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/test_edit_part1': typeof AuthenticatedTest_edit_part1Route
+  '/history/copy': typeof AuthenticatedHistoryCopyRoute
+  '/purchaser/copy': typeof AuthenticatedPurchaserCopyRoute
+  '/purchaser/ref_verify': typeof AuthenticatedPurchaserRef_verifyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -116,10 +364,41 @@ export interface FileRoutesByTo {
   '/dashboard_test': typeof AuthenticatedDashboard_testRoute
   '/dashboard_test1': typeof AuthenticatedDashboard_test1Route
   '/dashboard_test_edit': typeof AuthenticatedDashboard_test_editRoute
-  '/history': typeof AuthenticatedHistoryRoute
+  '/history': typeof AuthenticatedHistoryRouteWithChildren
+  '/history_staging_work': typeof AuthenticatedHistory_staging_workRoute
   '/profile': typeof AuthenticatedProfileRoute
-  '/purchaser': typeof AuthenticatedPurchaserRoute
+  '/purchaser': typeof AuthenticatedPurchaserRouteWithChildren
+  '/purchaser_before_batch': typeof AuthenticatedPurchaser_before_batchRoute
+  '/purchaser_clean': typeof AuthenticatedPurchaser_cleanRoute
+  '/purchaser_current': typeof AuthenticatedPurchaser_currentRoute
+  '/purchaser_current_build': typeof AuthenticatedPurchaser_current_buildRoute
+  '/purchaser_current_line': typeof AuthenticatedPurchaser_current_lineRoute
+  '/purchaser_current_line_final': typeof AuthenticatedPurchaser_current_line_finalRoute
+  '/purchaser_current_line_final2': typeof AuthenticatedPurchaser_current_line_final2Route
+  '/purchaser_current_line_mod': typeof AuthenticatedPurchaser_current_line_modRoute
+  '/purchaser_current_line_test17': typeof AuthenticatedPurchaser_current_line_test17Route
+  '/purchaser_current_line_test18': typeof AuthenticatedPurchaser_current_line_test18Route
+  '/purchaser_current_line_test2': typeof AuthenticatedPurchaser_current_line_test2Route
+  '/purchaser_current_line_test4': typeof AuthenticatedPurchaser_current_line_test4Route
+  '/purchaser_current_line_test5': typeof AuthenticatedPurchaser_current_line_test5Route
+  '/purchaser_current_line_test6': typeof AuthenticatedPurchaser_current_line_test6Route
+  '/purchaser_current_line_test9': typeof AuthenticatedPurchaser_current_line_test9Route
+  '/purchaser_draft': typeof AuthenticatedPurchaser_draftRoute
+  '/purchaser_edit': typeof AuthenticatedPurchaser_editRoute
+  '/purchaser_edit_flow': typeof AuthenticatedPurchaser_edit_flowRoute
+  '/purchaser_line_edit_current': typeof AuthenticatedPurchaser_line_edit_currentRoute
+  '/purchaser_pre': typeof AuthenticatedPurchaser_preRoute
+  '/purchaser_ref': typeof AuthenticatedPurchaser_refRoute
+  '/purchaser_source': typeof AuthenticatedPurchaser_sourceRoute
+  '/purchaser_stage': typeof AuthenticatedPurchaser_stageRoute
+  '/purchaser_staging_work': typeof AuthenticatedPurchaser_staging_workRoute
+  '/purchaser_temp': typeof AuthenticatedPurchaser_tempRoute
+  '/purchaser_temp_verify': typeof AuthenticatedPurchaser_temp_verifyRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/test_edit_part1': typeof AuthenticatedTest_edit_part1Route
+  '/history/copy': typeof AuthenticatedHistoryCopyRoute
+  '/purchaser/copy': typeof AuthenticatedPurchaserCopyRoute
+  '/purchaser/ref_verify': typeof AuthenticatedPurchaserRef_verifyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -132,10 +411,41 @@ export interface FileRoutesById {
   '/_authenticated/dashboard_test': typeof AuthenticatedDashboard_testRoute
   '/_authenticated/dashboard_test1': typeof AuthenticatedDashboard_test1Route
   '/_authenticated/dashboard_test_edit': typeof AuthenticatedDashboard_test_editRoute
-  '/_authenticated/history': typeof AuthenticatedHistoryRoute
+  '/_authenticated/history': typeof AuthenticatedHistoryRouteWithChildren
+  '/_authenticated/history_staging_work': typeof AuthenticatedHistory_staging_workRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
-  '/_authenticated/purchaser': typeof AuthenticatedPurchaserRoute
+  '/_authenticated/purchaser': typeof AuthenticatedPurchaserRouteWithChildren
+  '/_authenticated/purchaser_before_batch': typeof AuthenticatedPurchaser_before_batchRoute
+  '/_authenticated/purchaser_clean': typeof AuthenticatedPurchaser_cleanRoute
+  '/_authenticated/purchaser_current': typeof AuthenticatedPurchaser_currentRoute
+  '/_authenticated/purchaser_current_build': typeof AuthenticatedPurchaser_current_buildRoute
+  '/_authenticated/purchaser_current_line': typeof AuthenticatedPurchaser_current_lineRoute
+  '/_authenticated/purchaser_current_line_final': typeof AuthenticatedPurchaser_current_line_finalRoute
+  '/_authenticated/purchaser_current_line_final2': typeof AuthenticatedPurchaser_current_line_final2Route
+  '/_authenticated/purchaser_current_line_mod': typeof AuthenticatedPurchaser_current_line_modRoute
+  '/_authenticated/purchaser_current_line_test17': typeof AuthenticatedPurchaser_current_line_test17Route
+  '/_authenticated/purchaser_current_line_test18': typeof AuthenticatedPurchaser_current_line_test18Route
+  '/_authenticated/purchaser_current_line_test2': typeof AuthenticatedPurchaser_current_line_test2Route
+  '/_authenticated/purchaser_current_line_test4': typeof AuthenticatedPurchaser_current_line_test4Route
+  '/_authenticated/purchaser_current_line_test5': typeof AuthenticatedPurchaser_current_line_test5Route
+  '/_authenticated/purchaser_current_line_test6': typeof AuthenticatedPurchaser_current_line_test6Route
+  '/_authenticated/purchaser_current_line_test9': typeof AuthenticatedPurchaser_current_line_test9Route
+  '/_authenticated/purchaser_draft': typeof AuthenticatedPurchaser_draftRoute
+  '/_authenticated/purchaser_edit': typeof AuthenticatedPurchaser_editRoute
+  '/_authenticated/purchaser_edit_flow': typeof AuthenticatedPurchaser_edit_flowRoute
+  '/_authenticated/purchaser_line_edit_current': typeof AuthenticatedPurchaser_line_edit_currentRoute
+  '/_authenticated/purchaser_pre': typeof AuthenticatedPurchaser_preRoute
+  '/_authenticated/purchaser_ref': typeof AuthenticatedPurchaser_refRoute
+  '/_authenticated/purchaser_source': typeof AuthenticatedPurchaser_sourceRoute
+  '/_authenticated/purchaser_stage': typeof AuthenticatedPurchaser_stageRoute
+  '/_authenticated/purchaser_staging_work': typeof AuthenticatedPurchaser_staging_workRoute
+  '/_authenticated/purchaser_temp': typeof AuthenticatedPurchaser_tempRoute
+  '/_authenticated/purchaser_temp_verify': typeof AuthenticatedPurchaser_temp_verifyRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/test_edit_part1': typeof AuthenticatedTest_edit_part1Route
+  '/_authenticated/history/copy': typeof AuthenticatedHistoryCopyRoute
+  '/_authenticated/purchaser/copy': typeof AuthenticatedPurchaserCopyRoute
+  '/_authenticated/purchaser/ref_verify': typeof AuthenticatedPurchaserRef_verifyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -149,9 +459,40 @@ export interface FileRouteTypes {
     | '/dashboard_test1'
     | '/dashboard_test_edit'
     | '/history'
+    | '/history_staging_work'
     | '/profile'
     | '/purchaser'
+    | '/purchaser_before_batch'
+    | '/purchaser_clean'
+    | '/purchaser_current'
+    | '/purchaser_current_build'
+    | '/purchaser_current_line'
+    | '/purchaser_current_line_final'
+    | '/purchaser_current_line_final2'
+    | '/purchaser_current_line_mod'
+    | '/purchaser_current_line_test17'
+    | '/purchaser_current_line_test18'
+    | '/purchaser_current_line_test2'
+    | '/purchaser_current_line_test4'
+    | '/purchaser_current_line_test5'
+    | '/purchaser_current_line_test6'
+    | '/purchaser_current_line_test9'
+    | '/purchaser_draft'
+    | '/purchaser_edit'
+    | '/purchaser_edit_flow'
+    | '/purchaser_line_edit_current'
+    | '/purchaser_pre'
+    | '/purchaser_ref'
+    | '/purchaser_source'
+    | '/purchaser_stage'
+    | '/purchaser_staging_work'
+    | '/purchaser_temp'
+    | '/purchaser_temp_verify'
     | '/settings'
+    | '/test_edit_part1'
+    | '/history/copy'
+    | '/purchaser/copy'
+    | '/purchaser/ref_verify'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -163,9 +504,40 @@ export interface FileRouteTypes {
     | '/dashboard_test1'
     | '/dashboard_test_edit'
     | '/history'
+    | '/history_staging_work'
     | '/profile'
     | '/purchaser'
+    | '/purchaser_before_batch'
+    | '/purchaser_clean'
+    | '/purchaser_current'
+    | '/purchaser_current_build'
+    | '/purchaser_current_line'
+    | '/purchaser_current_line_final'
+    | '/purchaser_current_line_final2'
+    | '/purchaser_current_line_mod'
+    | '/purchaser_current_line_test17'
+    | '/purchaser_current_line_test18'
+    | '/purchaser_current_line_test2'
+    | '/purchaser_current_line_test4'
+    | '/purchaser_current_line_test5'
+    | '/purchaser_current_line_test6'
+    | '/purchaser_current_line_test9'
+    | '/purchaser_draft'
+    | '/purchaser_edit'
+    | '/purchaser_edit_flow'
+    | '/purchaser_line_edit_current'
+    | '/purchaser_pre'
+    | '/purchaser_ref'
+    | '/purchaser_source'
+    | '/purchaser_stage'
+    | '/purchaser_staging_work'
+    | '/purchaser_temp'
+    | '/purchaser_temp_verify'
     | '/settings'
+    | '/test_edit_part1'
+    | '/history/copy'
+    | '/purchaser/copy'
+    | '/purchaser/ref_verify'
   id:
     | '__root__'
     | '/'
@@ -178,9 +550,40 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard_test1'
     | '/_authenticated/dashboard_test_edit'
     | '/_authenticated/history'
+    | '/_authenticated/history_staging_work'
     | '/_authenticated/profile'
     | '/_authenticated/purchaser'
+    | '/_authenticated/purchaser_before_batch'
+    | '/_authenticated/purchaser_clean'
+    | '/_authenticated/purchaser_current'
+    | '/_authenticated/purchaser_current_build'
+    | '/_authenticated/purchaser_current_line'
+    | '/_authenticated/purchaser_current_line_final'
+    | '/_authenticated/purchaser_current_line_final2'
+    | '/_authenticated/purchaser_current_line_mod'
+    | '/_authenticated/purchaser_current_line_test17'
+    | '/_authenticated/purchaser_current_line_test18'
+    | '/_authenticated/purchaser_current_line_test2'
+    | '/_authenticated/purchaser_current_line_test4'
+    | '/_authenticated/purchaser_current_line_test5'
+    | '/_authenticated/purchaser_current_line_test6'
+    | '/_authenticated/purchaser_current_line_test9'
+    | '/_authenticated/purchaser_draft'
+    | '/_authenticated/purchaser_edit'
+    | '/_authenticated/purchaser_edit_flow'
+    | '/_authenticated/purchaser_line_edit_current'
+    | '/_authenticated/purchaser_pre'
+    | '/_authenticated/purchaser_ref'
+    | '/_authenticated/purchaser_source'
+    | '/_authenticated/purchaser_stage'
+    | '/_authenticated/purchaser_staging_work'
+    | '/_authenticated/purchaser_temp'
+    | '/_authenticated/purchaser_temp_verify'
     | '/_authenticated/settings'
+    | '/_authenticated/test_edit_part1'
+    | '/_authenticated/history/copy'
+    | '/_authenticated/purchaser/copy'
+    | '/_authenticated/purchaser/ref_verify'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -212,11 +615,200 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/test_edit_part1': {
+      id: '/_authenticated/test_edit_part1'
+      path: '/test_edit_part1'
+      fullPath: '/test_edit_part1'
+      preLoaderRoute: typeof AuthenticatedTest_edit_part1RouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_temp_verify': {
+      id: '/_authenticated/purchaser_temp_verify'
+      path: '/purchaser_temp_verify'
+      fullPath: '/purchaser_temp_verify'
+      preLoaderRoute: typeof AuthenticatedPurchaser_temp_verifyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_temp': {
+      id: '/_authenticated/purchaser_temp'
+      path: '/purchaser_temp'
+      fullPath: '/purchaser_temp'
+      preLoaderRoute: typeof AuthenticatedPurchaser_tempRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_staging_work': {
+      id: '/_authenticated/purchaser_staging_work'
+      path: '/purchaser_staging_work'
+      fullPath: '/purchaser_staging_work'
+      preLoaderRoute: typeof AuthenticatedPurchaser_staging_workRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_stage': {
+      id: '/_authenticated/purchaser_stage'
+      path: '/purchaser_stage'
+      fullPath: '/purchaser_stage'
+      preLoaderRoute: typeof AuthenticatedPurchaser_stageRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_source': {
+      id: '/_authenticated/purchaser_source'
+      path: '/purchaser_source'
+      fullPath: '/purchaser_source'
+      preLoaderRoute: typeof AuthenticatedPurchaser_sourceRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_ref': {
+      id: '/_authenticated/purchaser_ref'
+      path: '/purchaser_ref'
+      fullPath: '/purchaser_ref'
+      preLoaderRoute: typeof AuthenticatedPurchaser_refRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_pre': {
+      id: '/_authenticated/purchaser_pre'
+      path: '/purchaser_pre'
+      fullPath: '/purchaser_pre'
+      preLoaderRoute: typeof AuthenticatedPurchaser_preRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_line_edit_current': {
+      id: '/_authenticated/purchaser_line_edit_current'
+      path: '/purchaser_line_edit_current'
+      fullPath: '/purchaser_line_edit_current'
+      preLoaderRoute: typeof AuthenticatedPurchaser_line_edit_currentRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_edit_flow': {
+      id: '/_authenticated/purchaser_edit_flow'
+      path: '/purchaser_edit_flow'
+      fullPath: '/purchaser_edit_flow'
+      preLoaderRoute: typeof AuthenticatedPurchaser_edit_flowRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_edit': {
+      id: '/_authenticated/purchaser_edit'
+      path: '/purchaser_edit'
+      fullPath: '/purchaser_edit'
+      preLoaderRoute: typeof AuthenticatedPurchaser_editRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_draft': {
+      id: '/_authenticated/purchaser_draft'
+      path: '/purchaser_draft'
+      fullPath: '/purchaser_draft'
+      preLoaderRoute: typeof AuthenticatedPurchaser_draftRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_current_line_test9': {
+      id: '/_authenticated/purchaser_current_line_test9'
+      path: '/purchaser_current_line_test9'
+      fullPath: '/purchaser_current_line_test9'
+      preLoaderRoute: typeof AuthenticatedPurchaser_current_line_test9RouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_current_line_test6': {
+      id: '/_authenticated/purchaser_current_line_test6'
+      path: '/purchaser_current_line_test6'
+      fullPath: '/purchaser_current_line_test6'
+      preLoaderRoute: typeof AuthenticatedPurchaser_current_line_test6RouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_current_line_test5': {
+      id: '/_authenticated/purchaser_current_line_test5'
+      path: '/purchaser_current_line_test5'
+      fullPath: '/purchaser_current_line_test5'
+      preLoaderRoute: typeof AuthenticatedPurchaser_current_line_test5RouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_current_line_test4': {
+      id: '/_authenticated/purchaser_current_line_test4'
+      path: '/purchaser_current_line_test4'
+      fullPath: '/purchaser_current_line_test4'
+      preLoaderRoute: typeof AuthenticatedPurchaser_current_line_test4RouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_current_line_test2': {
+      id: '/_authenticated/purchaser_current_line_test2'
+      path: '/purchaser_current_line_test2'
+      fullPath: '/purchaser_current_line_test2'
+      preLoaderRoute: typeof AuthenticatedPurchaser_current_line_test2RouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_current_line_test18': {
+      id: '/_authenticated/purchaser_current_line_test18'
+      path: '/purchaser_current_line_test18'
+      fullPath: '/purchaser_current_line_test18'
+      preLoaderRoute: typeof AuthenticatedPurchaser_current_line_test18RouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_current_line_test17': {
+      id: '/_authenticated/purchaser_current_line_test17'
+      path: '/purchaser_current_line_test17'
+      fullPath: '/purchaser_current_line_test17'
+      preLoaderRoute: typeof AuthenticatedPurchaser_current_line_test17RouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_current_line_mod': {
+      id: '/_authenticated/purchaser_current_line_mod'
+      path: '/purchaser_current_line_mod'
+      fullPath: '/purchaser_current_line_mod'
+      preLoaderRoute: typeof AuthenticatedPurchaser_current_line_modRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_current_line_final2': {
+      id: '/_authenticated/purchaser_current_line_final2'
+      path: '/purchaser_current_line_final2'
+      fullPath: '/purchaser_current_line_final2'
+      preLoaderRoute: typeof AuthenticatedPurchaser_current_line_final2RouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_current_line_final': {
+      id: '/_authenticated/purchaser_current_line_final'
+      path: '/purchaser_current_line_final'
+      fullPath: '/purchaser_current_line_final'
+      preLoaderRoute: typeof AuthenticatedPurchaser_current_line_finalRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_current_line': {
+      id: '/_authenticated/purchaser_current_line'
+      path: '/purchaser_current_line'
+      fullPath: '/purchaser_current_line'
+      preLoaderRoute: typeof AuthenticatedPurchaser_current_lineRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_current_build': {
+      id: '/_authenticated/purchaser_current_build'
+      path: '/purchaser_current_build'
+      fullPath: '/purchaser_current_build'
+      preLoaderRoute: typeof AuthenticatedPurchaser_current_buildRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_current': {
+      id: '/_authenticated/purchaser_current'
+      path: '/purchaser_current'
+      fullPath: '/purchaser_current'
+      preLoaderRoute: typeof AuthenticatedPurchaser_currentRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_clean': {
+      id: '/_authenticated/purchaser_clean'
+      path: '/purchaser_clean'
+      fullPath: '/purchaser_clean'
+      preLoaderRoute: typeof AuthenticatedPurchaser_cleanRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/purchaser_before_batch': {
+      id: '/_authenticated/purchaser_before_batch'
+      path: '/purchaser_before_batch'
+      fullPath: '/purchaser_before_batch'
+      preLoaderRoute: typeof AuthenticatedPurchaser_before_batchRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/purchaser': {
@@ -231,6 +823,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/history_staging_work': {
+      id: '/_authenticated/history_staging_work'
+      path: '/history_staging_work'
+      fullPath: '/history_staging_work'
+      preLoaderRoute: typeof AuthenticatedHistory_staging_workRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/history': {
@@ -282,8 +881,57 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/purchaser/ref_verify': {
+      id: '/_authenticated/purchaser/ref_verify'
+      path: '/ref_verify'
+      fullPath: '/purchaser/ref_verify'
+      preLoaderRoute: typeof AuthenticatedPurchaserRef_verifyRouteImport
+      parentRoute: typeof AuthenticatedPurchaserRoute
+    }
+    '/_authenticated/purchaser/copy': {
+      id: '/_authenticated/purchaser/copy'
+      path: '/copy'
+      fullPath: '/purchaser/copy'
+      preLoaderRoute: typeof AuthenticatedPurchaserCopyRouteImport
+      parentRoute: typeof AuthenticatedPurchaserRoute
+    }
+    '/_authenticated/history/copy': {
+      id: '/_authenticated/history/copy'
+      path: '/copy'
+      fullPath: '/history/copy'
+      preLoaderRoute: typeof AuthenticatedHistoryCopyRouteImport
+      parentRoute: typeof AuthenticatedHistoryRoute
+    }
   }
 }
+
+interface AuthenticatedHistoryRouteChildren {
+  AuthenticatedHistoryCopyRoute: typeof AuthenticatedHistoryCopyRoute
+}
+
+const AuthenticatedHistoryRouteChildren: AuthenticatedHistoryRouteChildren = {
+  AuthenticatedHistoryCopyRoute: AuthenticatedHistoryCopyRoute,
+}
+
+const AuthenticatedHistoryRouteWithChildren =
+  AuthenticatedHistoryRoute._addFileChildren(AuthenticatedHistoryRouteChildren)
+
+interface AuthenticatedPurchaserRouteChildren {
+  AuthenticatedPurchaserCopyRoute: typeof AuthenticatedPurchaserCopyRoute
+  AuthenticatedPurchaserRef_verifyRoute: typeof AuthenticatedPurchaserRef_verifyRoute
+}
+
+const AuthenticatedPurchaserRouteChildren: AuthenticatedPurchaserRouteChildren =
+  {
+    AuthenticatedPurchaserCopyRoute: AuthenticatedPurchaserCopyRoute,
+    AuthenticatedPurchaserRef_verifyRoute:
+      AuthenticatedPurchaserRef_verifyRoute,
+  }
+
+const AuthenticatedPurchaserRouteWithChildren =
+  AuthenticatedPurchaserRoute._addFileChildren(
+    AuthenticatedPurchaserRouteChildren,
+  )
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
@@ -292,10 +940,38 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboard_testRoute: typeof AuthenticatedDashboard_testRoute
   AuthenticatedDashboard_test1Route: typeof AuthenticatedDashboard_test1Route
   AuthenticatedDashboard_test_editRoute: typeof AuthenticatedDashboard_test_editRoute
-  AuthenticatedHistoryRoute: typeof AuthenticatedHistoryRoute
+  AuthenticatedHistoryRoute: typeof AuthenticatedHistoryRouteWithChildren
+  AuthenticatedHistory_staging_workRoute: typeof AuthenticatedHistory_staging_workRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
-  AuthenticatedPurchaserRoute: typeof AuthenticatedPurchaserRoute
+  AuthenticatedPurchaserRoute: typeof AuthenticatedPurchaserRouteWithChildren
+  AuthenticatedPurchaser_before_batchRoute: typeof AuthenticatedPurchaser_before_batchRoute
+  AuthenticatedPurchaser_cleanRoute: typeof AuthenticatedPurchaser_cleanRoute
+  AuthenticatedPurchaser_currentRoute: typeof AuthenticatedPurchaser_currentRoute
+  AuthenticatedPurchaser_current_buildRoute: typeof AuthenticatedPurchaser_current_buildRoute
+  AuthenticatedPurchaser_current_lineRoute: typeof AuthenticatedPurchaser_current_lineRoute
+  AuthenticatedPurchaser_current_line_finalRoute: typeof AuthenticatedPurchaser_current_line_finalRoute
+  AuthenticatedPurchaser_current_line_final2Route: typeof AuthenticatedPurchaser_current_line_final2Route
+  AuthenticatedPurchaser_current_line_modRoute: typeof AuthenticatedPurchaser_current_line_modRoute
+  AuthenticatedPurchaser_current_line_test17Route: typeof AuthenticatedPurchaser_current_line_test17Route
+  AuthenticatedPurchaser_current_line_test18Route: typeof AuthenticatedPurchaser_current_line_test18Route
+  AuthenticatedPurchaser_current_line_test2Route: typeof AuthenticatedPurchaser_current_line_test2Route
+  AuthenticatedPurchaser_current_line_test4Route: typeof AuthenticatedPurchaser_current_line_test4Route
+  AuthenticatedPurchaser_current_line_test5Route: typeof AuthenticatedPurchaser_current_line_test5Route
+  AuthenticatedPurchaser_current_line_test6Route: typeof AuthenticatedPurchaser_current_line_test6Route
+  AuthenticatedPurchaser_current_line_test9Route: typeof AuthenticatedPurchaser_current_line_test9Route
+  AuthenticatedPurchaser_draftRoute: typeof AuthenticatedPurchaser_draftRoute
+  AuthenticatedPurchaser_editRoute: typeof AuthenticatedPurchaser_editRoute
+  AuthenticatedPurchaser_edit_flowRoute: typeof AuthenticatedPurchaser_edit_flowRoute
+  AuthenticatedPurchaser_line_edit_currentRoute: typeof AuthenticatedPurchaser_line_edit_currentRoute
+  AuthenticatedPurchaser_preRoute: typeof AuthenticatedPurchaser_preRoute
+  AuthenticatedPurchaser_refRoute: typeof AuthenticatedPurchaser_refRoute
+  AuthenticatedPurchaser_sourceRoute: typeof AuthenticatedPurchaser_sourceRoute
+  AuthenticatedPurchaser_stageRoute: typeof AuthenticatedPurchaser_stageRoute
+  AuthenticatedPurchaser_staging_workRoute: typeof AuthenticatedPurchaser_staging_workRoute
+  AuthenticatedPurchaser_tempRoute: typeof AuthenticatedPurchaser_tempRoute
+  AuthenticatedPurchaser_temp_verifyRoute: typeof AuthenticatedPurchaser_temp_verifyRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedTest_edit_part1Route: typeof AuthenticatedTest_edit_part1Route
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -305,10 +981,55 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboard_testRoute: AuthenticatedDashboard_testRoute,
   AuthenticatedDashboard_test1Route: AuthenticatedDashboard_test1Route,
   AuthenticatedDashboard_test_editRoute: AuthenticatedDashboard_test_editRoute,
-  AuthenticatedHistoryRoute: AuthenticatedHistoryRoute,
+  AuthenticatedHistoryRoute: AuthenticatedHistoryRouteWithChildren,
+  AuthenticatedHistory_staging_workRoute:
+    AuthenticatedHistory_staging_workRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
-  AuthenticatedPurchaserRoute: AuthenticatedPurchaserRoute,
+  AuthenticatedPurchaserRoute: AuthenticatedPurchaserRouteWithChildren,
+  AuthenticatedPurchaser_before_batchRoute:
+    AuthenticatedPurchaser_before_batchRoute,
+  AuthenticatedPurchaser_cleanRoute: AuthenticatedPurchaser_cleanRoute,
+  AuthenticatedPurchaser_currentRoute: AuthenticatedPurchaser_currentRoute,
+  AuthenticatedPurchaser_current_buildRoute:
+    AuthenticatedPurchaser_current_buildRoute,
+  AuthenticatedPurchaser_current_lineRoute:
+    AuthenticatedPurchaser_current_lineRoute,
+  AuthenticatedPurchaser_current_line_finalRoute:
+    AuthenticatedPurchaser_current_line_finalRoute,
+  AuthenticatedPurchaser_current_line_final2Route:
+    AuthenticatedPurchaser_current_line_final2Route,
+  AuthenticatedPurchaser_current_line_modRoute:
+    AuthenticatedPurchaser_current_line_modRoute,
+  AuthenticatedPurchaser_current_line_test17Route:
+    AuthenticatedPurchaser_current_line_test17Route,
+  AuthenticatedPurchaser_current_line_test18Route:
+    AuthenticatedPurchaser_current_line_test18Route,
+  AuthenticatedPurchaser_current_line_test2Route:
+    AuthenticatedPurchaser_current_line_test2Route,
+  AuthenticatedPurchaser_current_line_test4Route:
+    AuthenticatedPurchaser_current_line_test4Route,
+  AuthenticatedPurchaser_current_line_test5Route:
+    AuthenticatedPurchaser_current_line_test5Route,
+  AuthenticatedPurchaser_current_line_test6Route:
+    AuthenticatedPurchaser_current_line_test6Route,
+  AuthenticatedPurchaser_current_line_test9Route:
+    AuthenticatedPurchaser_current_line_test9Route,
+  AuthenticatedPurchaser_draftRoute: AuthenticatedPurchaser_draftRoute,
+  AuthenticatedPurchaser_editRoute: AuthenticatedPurchaser_editRoute,
+  AuthenticatedPurchaser_edit_flowRoute: AuthenticatedPurchaser_edit_flowRoute,
+  AuthenticatedPurchaser_line_edit_currentRoute:
+    AuthenticatedPurchaser_line_edit_currentRoute,
+  AuthenticatedPurchaser_preRoute: AuthenticatedPurchaser_preRoute,
+  AuthenticatedPurchaser_refRoute: AuthenticatedPurchaser_refRoute,
+  AuthenticatedPurchaser_sourceRoute: AuthenticatedPurchaser_sourceRoute,
+  AuthenticatedPurchaser_stageRoute: AuthenticatedPurchaser_stageRoute,
+  AuthenticatedPurchaser_staging_workRoute:
+    AuthenticatedPurchaser_staging_workRoute,
+  AuthenticatedPurchaser_tempRoute: AuthenticatedPurchaser_tempRoute,
+  AuthenticatedPurchaser_temp_verifyRoute:
+    AuthenticatedPurchaser_temp_verifyRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedTest_edit_part1Route: AuthenticatedTest_edit_part1Route,
 }
 
 const AuthenticatedRouteRouteWithChildren =
