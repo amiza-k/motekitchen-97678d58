@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Trash2, Plus, Send, AlertTriangle, Building2, MapPin, Users, ClipboardList, Settings as SettingsIcon } from "lucide-react";
+import { Trash2, Edit2, Plus, Send, AlertTriangle, Building2, MapPin, Users, ClipboardList, Settings as SettingsIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
@@ -243,7 +243,22 @@ function DepartmentBoard({ profile }: { profile: Profile }) {
   const addEntry = useMutation({
     mutationFn: async () => {
       const q = parseFloat(quantity);
-      if (!q || q <= 0) throw new Error("مقدار نامعتبر");
+      if (!q || q <= 0) {
+        throw new Error("مقدار نامعتبر");
+      }
+
+      // Check duplicates
+      const targetName = mode === "catalog"
+        ? catalog.find(c => c.id === catalogId)?.name
+        : customName.trim();
+      if (targetName) {
+        const isDuplicate = entries.some(
+          e => e.item_name.trim().toLowerCase() === targetName.trim().toLowerCase()
+        );
+        if (isDuplicate) {
+          throw new Error("این مورد پیش از این در لیست شما وجود دارد. لطفاً مقدار آن را در همان‌جا ویرایش کنید.");
+        }
+      }
       const { data: u } = await supabase.auth.getUser();
       if (mode === "catalog") {
         const item = catalog.find(c => c.id === catalogId);
@@ -280,7 +295,33 @@ function DepartmentBoard({ profile }: { profile: Profile }) {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["entries", deptId] }),
   });
 
-  const [confirmSend, setConfirmSend] = useState(false);
+const [confirmSend, setConfirmSend] = useState(false);
+  const [editingEntry, setEditingEntry] = useState<any | null>(null);
+  const [editQuantity, setEditQuantity] = useState("");
+  const [editNote, setEditNote] = useState("");
+  const [editUrgency, setEditUrgency] = useState<"normal" | "urgent">("normal");
+
+  const openEditDialog = (entry: any) => {
+    setEditingEntry(entry);
+    setEditQuantity(entry.quantity.toString());
+    setEditNote(entry.note || "");
+    setEditUrgency(entry.urgency);
+  };
+
+  const updateEntry = useMutation({
+    mutationFn: async ({ id, quantity, note, urgency }: { id: string; quantity: number; note: string | null; urgency: "normal" | "urgent" }) => {
+      const { error } = await supabase
+        .from("shopping_list_entries")
+        .update({ quantity, note, urgency })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["entries", deptId] });
+      toast.success("تغییرات ثبت شد");
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
   const sendBatch = useMutation({
     mutationFn: async () => {
       if (entries.length === 0) return;
@@ -409,14 +450,82 @@ function DepartmentBoard({ profile }: { profile: Profile }) {
                   </div>
                   {e.note && <p className="text-sm text-muted-foreground mt-1">{e.note}</p>}
                 </div>
-                <Button size="icon" variant="ghost" onClick={() => removeEntry.mutate(e.id)}>
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                <div className="flex gap-1 items-center">
+                  <Button size="icon" variant="ghost" onClick={() => openEditDialog(e)}>
+                    <Edit2 className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                  </Button>
+                  <Button size="icon" variant="ghost" onClick={() => removeEntry.mutate(e.id)}>
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
+                </div>
               </li>
             ))}
           </ul>
         )}
       </Card>
+
+      <Dialog open={!!editingEntry} onOpenChange={() => setEditingEntry(null)}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="text-right">ویرایش اقلام سفارش</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4 text-right" dir="rtl">
+            <div className="space-y-2">
+              <Label>مقدار ({editingEntry?.unit})</Label>
+              <Input
+                type="number"
+                step="any"
+                value={editQuantity}
+                onChange={(e) => setEditQuantity(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>یادداشت تدارکات</Label>
+              <Textarea
+                rows={2}
+                value={editNote}
+                onChange={(e) => setEditNote(e.target.value)}
+                placeholder="یادداشتی ثبت کنید..."
+              />
+            </div>
+            <div className="flex items-center gap-2 mt-2">
+              <input
+                type="checkbox"
+                id="edit-urgent"
+                checked={editUrgency === "urgent"}
+                onChange={(e) => setEditUrgency(e.target.checked ? "urgent" : "normal")}
+                className="rounded border-gray-300 text-primary focus:ring-primary h-4 w-4"
+              />
+              <Label htmlFor="edit-urgent" className="cursor-pointer text-sm font-medium">
+                این مورد بسیار فوری است
+              </Label>
+            </div>
+          </div>
+          <DialogFooter className="flex justify-between gap-2" dir="rtl">
+            <Button variant="outline" onClick={() => setEditingEntry(null)}>
+              انصراف
+            </Button>
+            <Button
+              onClick={() => {
+                const q = parseFloat(editQuantity);
+                if (!q || q <= 0) {
+                  return;
+                }
+                updateEntry.mutate({
+                  id: editingEntry.id,
+                  quantity: q,
+                  note: editNote || null,
+                  urgency: editUrgency,
+                });
+                setEditingEntry(null);
+              }}
+              disabled={updateEntry.isPending}
+            >
+              ثبت تغییرات
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={confirmSend} onOpenChange={setConfirmSend}>
         <DialogContent>

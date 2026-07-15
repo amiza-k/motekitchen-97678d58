@@ -16,6 +16,11 @@ import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedPurchaserRouteImport } from './routes/_authenticated/purchaser'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticated/history'
+import { Route as AuthenticatedDashboard_test_editRouteImport } from './routes/_authenticated/dashboard_test_edit'
+import { Route as AuthenticatedDashboard_test1RouteImport } from './routes/_authenticated/dashboard_test1'
+import { Route as AuthenticatedDashboard_testRouteImport } from './routes/_authenticated/dashboard_test'
+import { Route as AuthenticatedDashboard_stagingRouteImport } from './routes/_authenticated/dashboard_staging'
+import { Route as AuthenticatedDashboard_modRouteImport } from './routes/_authenticated/dashboard_mod'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 
 const AuthRoute = AuthRouteImport.update({
@@ -52,6 +57,36 @@ const AuthenticatedHistoryRoute = AuthenticatedHistoryRouteImport.update({
   path: '/history',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDashboard_test_editRoute =
+  AuthenticatedDashboard_test_editRouteImport.update({
+    id: '/dashboard_test_edit',
+    path: '/dashboard_test_edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboard_test1Route =
+  AuthenticatedDashboard_test1RouteImport.update({
+    id: '/dashboard_test1',
+    path: '/dashboard_test1',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboard_testRoute =
+  AuthenticatedDashboard_testRouteImport.update({
+    id: '/dashboard_test',
+    path: '/dashboard_test',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboard_stagingRoute =
+  AuthenticatedDashboard_stagingRouteImport.update({
+    id: '/dashboard_staging',
+    path: '/dashboard_staging',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboard_modRoute =
+  AuthenticatedDashboard_modRouteImport.update({
+    id: '/dashboard_mod',
+    path: '/dashboard_mod',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -62,6 +97,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/dashboard_mod': typeof AuthenticatedDashboard_modRoute
+  '/dashboard_staging': typeof AuthenticatedDashboard_stagingRoute
+  '/dashboard_test': typeof AuthenticatedDashboard_testRoute
+  '/dashboard_test1': typeof AuthenticatedDashboard_test1Route
+  '/dashboard_test_edit': typeof AuthenticatedDashboard_test_editRoute
   '/history': typeof AuthenticatedHistoryRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/purchaser': typeof AuthenticatedPurchaserRoute
@@ -71,6 +111,11 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/dashboard_mod': typeof AuthenticatedDashboard_modRoute
+  '/dashboard_staging': typeof AuthenticatedDashboard_stagingRoute
+  '/dashboard_test': typeof AuthenticatedDashboard_testRoute
+  '/dashboard_test1': typeof AuthenticatedDashboard_test1Route
+  '/dashboard_test_edit': typeof AuthenticatedDashboard_test_editRoute
   '/history': typeof AuthenticatedHistoryRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/purchaser': typeof AuthenticatedPurchaserRoute
@@ -82,6 +127,11 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/dashboard_mod': typeof AuthenticatedDashboard_modRoute
+  '/_authenticated/dashboard_staging': typeof AuthenticatedDashboard_stagingRoute
+  '/_authenticated/dashboard_test': typeof AuthenticatedDashboard_testRoute
+  '/_authenticated/dashboard_test1': typeof AuthenticatedDashboard_test1Route
+  '/_authenticated/dashboard_test_edit': typeof AuthenticatedDashboard_test_editRoute
   '/_authenticated/history': typeof AuthenticatedHistoryRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/purchaser': typeof AuthenticatedPurchaserRoute
@@ -93,6 +143,11 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/dashboard_mod'
+    | '/dashboard_staging'
+    | '/dashboard_test'
+    | '/dashboard_test1'
+    | '/dashboard_test_edit'
     | '/history'
     | '/profile'
     | '/purchaser'
@@ -102,6 +157,11 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/dashboard_mod'
+    | '/dashboard_staging'
+    | '/dashboard_test'
+    | '/dashboard_test1'
+    | '/dashboard_test_edit'
     | '/history'
     | '/profile'
     | '/purchaser'
@@ -112,6 +172,11 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/dashboard'
+    | '/_authenticated/dashboard_mod'
+    | '/_authenticated/dashboard_staging'
+    | '/_authenticated/dashboard_test'
+    | '/_authenticated/dashboard_test1'
+    | '/_authenticated/dashboard_test_edit'
     | '/_authenticated/history'
     | '/_authenticated/profile'
     | '/_authenticated/purchaser'
@@ -175,6 +240,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedHistoryRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/dashboard_test_edit': {
+      id: '/_authenticated/dashboard_test_edit'
+      path: '/dashboard_test_edit'
+      fullPath: '/dashboard_test_edit'
+      preLoaderRoute: typeof AuthenticatedDashboard_test_editRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard_test1': {
+      id: '/_authenticated/dashboard_test1'
+      path: '/dashboard_test1'
+      fullPath: '/dashboard_test1'
+      preLoaderRoute: typeof AuthenticatedDashboard_test1RouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard_test': {
+      id: '/_authenticated/dashboard_test'
+      path: '/dashboard_test'
+      fullPath: '/dashboard_test'
+      preLoaderRoute: typeof AuthenticatedDashboard_testRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard_staging': {
+      id: '/_authenticated/dashboard_staging'
+      path: '/dashboard_staging'
+      fullPath: '/dashboard_staging'
+      preLoaderRoute: typeof AuthenticatedDashboard_stagingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard_mod': {
+      id: '/_authenticated/dashboard_mod'
+      path: '/dashboard_mod'
+      fullPath: '/dashboard_mod'
+      preLoaderRoute: typeof AuthenticatedDashboard_modRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -187,6 +287,11 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDashboard_modRoute: typeof AuthenticatedDashboard_modRoute
+  AuthenticatedDashboard_stagingRoute: typeof AuthenticatedDashboard_stagingRoute
+  AuthenticatedDashboard_testRoute: typeof AuthenticatedDashboard_testRoute
+  AuthenticatedDashboard_test1Route: typeof AuthenticatedDashboard_test1Route
+  AuthenticatedDashboard_test_editRoute: typeof AuthenticatedDashboard_test_editRoute
   AuthenticatedHistoryRoute: typeof AuthenticatedHistoryRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedPurchaserRoute: typeof AuthenticatedPurchaserRoute
@@ -195,6 +300,11 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDashboard_modRoute: AuthenticatedDashboard_modRoute,
+  AuthenticatedDashboard_stagingRoute: AuthenticatedDashboard_stagingRoute,
+  AuthenticatedDashboard_testRoute: AuthenticatedDashboard_testRoute,
+  AuthenticatedDashboard_test1Route: AuthenticatedDashboard_test1Route,
+  AuthenticatedDashboard_test_editRoute: AuthenticatedDashboard_test_editRoute,
   AuthenticatedHistoryRoute: AuthenticatedHistoryRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedPurchaserRoute: AuthenticatedPurchaserRoute,
@@ -212,3 +322,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
