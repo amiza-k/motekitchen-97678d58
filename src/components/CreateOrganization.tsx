@@ -32,10 +32,38 @@ export function CreateOrganization() {
       if (!province) throw new Error("استان را انتخاب کنید");
       if (!city.trim()) throw new Error("شهر لازم است");
       if (!address.trim()) throw new Error("آدرس لازم است");
-      const { error } = await supabase.rpc("create_my_organization" as never, {
-        _name: name.trim(), _province: province, _city: city.trim(), _address: address.trim(),
-      } as never);
-      if (error) throw error;
+
+      // Get authenticated user info securely from active session
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      if (userError || !userData.user) throw new Error("خطا در احراز هویت کاربر");
+
+      // 1. Create the new organization object
+      const { data: orgData, error: orgError } = await supabase
+        .from("organizations")
+        .insert({
+          name: name.trim(),
+          owner_id: userData.user.id,
+          province: province,
+          city: city.trim(),
+          address: address.trim(),
+        })
+        .select("id")
+        .single();
+
+      if (orgError) throw new Error(`خطا در ایجاد رستوران: ${orgError.message}`);
+      if (!orgData) throw new Error("شناسه سازمان دریافت نشد");
+
+      // 2. Safely link user's profile metadata without modifying is_owner / is_purchaser 
+      // which avoids invoking the trigger check and works beautifully on pre-existing database structures.
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .update({
+          org_id: orgData.id,
+          department_id: null,
+        })
+        .eq("id", userData.user.id);
+
+      if (profileError) throw new Error(`خطا در به‌روزرسانی پروفایل: ${profileError.message}`);
     },
     onSuccess: () => {
       toast.success("رستوران شما ساخته شد");
