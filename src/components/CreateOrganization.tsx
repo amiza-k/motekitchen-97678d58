@@ -36,19 +36,18 @@ export function CreateOrganization() {
       const { data: userData, error: userError } = await supabase.auth.getUser();
       if (userError || !userData.user) throw new Error("خطا در احراز هویت کاربر");
 
-      // Step 1: Query the user's active profile status
-      // We check if the auto-triggered registration has already pre-mapped an organization 
-      // (as designed by default handle_new_user trigger in your production system).
+      // get current profile state first to verify existing org_id
       const { data: profileObj, error: getProfileError } = await supabase
         .from("profiles")
         .select("org_id")
         .eq("id", userData.user.id)
         .maybeSingle();
 
-      if (getProfileError) throw new Error(`خطا در بررسی مشخصات پروفایل: ${getProfileError.message}`);
+      if (getProfileError) throw new Error(`خطا در بررسی مشخصات: ${getProfileError.message}`);
 
-      // SUCCESS PATH ONE: If user has a pre-allocated empty organization, simply UPDATE it.
-      // Updates are fully permitted by Row-Level Security (RLS) under owner policies and dodge RLS blocks 100%!
+      // PLAN A: Hybrid fallback structure.
+      // If the user already has a default auto-created org_id (typically set during handle_new_user session creation),
+      // we only need to UPDATE that organization rather than trying to insert a new one which is blocked by RLS locally.
       if (profileObj?.org_id) {
         const { error: updateOrgError } = await supabase
           .from("organizations")
@@ -61,30 +60,53 @@ export function CreateOrganization() {
           .eq("id", profileObj.org_id);
 
         if (!updateOrgError) {
-          return; // Successfully set up!
+          return; // Successfully updated the organization and bypassing RLS blocks
         }
       }
 
-      // SUCCESS PATH TWO (SAFE FALLBACK): If profileObj has NO org_id (typically happens on manually broken local testing accounts),
-      // we utilize the PostgreSQL safe 'create_my_organization' RPC to handle SQL insertion.
-      // RPC uses SECURITY DEFINER backend settings, bypassing both Client RLS blocks and user authentication scope limits!
-      // This is the absolute robust recovery path for custom local accounts with NULL org_ids.
+      // PLAN B: If there's no pre-defined org_id on the active user profile (or update failed),
+      // we invoke the safe 'create_my_organization' RPC of Supabase.
+      // RPC uses SECURITY DEFINER in PostgreSQL which bypasses RLS policies entirely.
       const { error: rpcError } = await supabase.rpc("create_my_organization" as never, {
         _name: name.trim(),
         _province: province,
         _city: city.trim(),
         _address: address.trim(),
-      } as never);
+      });
 
       if (!rpcError) {
-        return; // Work complete!
+        return; // RPC successfully ran without trigger issues!
       }
 
-      // If both standard paths fail, we fall back to raw message debugging with transparent guidelines
-      // to let local developer align their database test accounts.
-      throw new Error(
-        `امکان ساخت رستوران روی دیتابیس وجود ندارد. وضعیت کدهای خطا: ${rpcError.message}`
-      );
+      // PLAN C: Edge Fallback (Direct secure insertion)
+      // If RPC is blocked by an un-synced trigger on the remote server, we fall back to manual insertion.
+      const { data: orgData, error: orgError } = await supabase
+        .from("organizations")
+        .insert({
+          name: name.trim(),
+          owner_id: userData.user.id,
+          province: province,
+          city: city.trim(),
+          address: address.trim(),
+        })
+        .select("id")
+        .single();
+
+      if (orgError) {
+        throw new Error(
+          `خطا در ثبت اطلاعات: دیتابیس لوکال فاقد هماهنگی نهایی است. متن خطا: ${orgError.message}`
+        );
+      }
+
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .update({
+          org_id: orgData.id,
+          department_id: null,
+        })
+        .eq("id", userData.user.id);
+
+      if (profileError) throw new Error(`خطا در به‌روزرسانی نهایی پروفایل: ${profileError.message}`);
     },
     onSuccess: () => {
       toast.success("رستوران شما ساخته شد");
