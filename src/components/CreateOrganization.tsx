@@ -33,40 +33,17 @@ export function CreateOrganization() {
       if (!city.trim()) throw new Error("شهر لازم است");
       if (!address.trim()) throw new Error("آدرس لازم است");
 
-      const { data: userData, error: userError } = await supabase.auth.getUser();
-      if (userError || !userData.user) throw new Error("خطا در احراز هویت کاربر");
-
-      // get current profile state first to verify existing org_id
-      const { data: profileObj, error: getProfileError } = await supabase
-        .from("profiles")
-        .select("org_id")
-        .eq("id", userData.user.id)
-        .maybeSingle();
-
-      if (getProfileError) throw new Error(`خطا در بررسی مشخصات: ${getProfileError.message}`);
-
-      // PLAN A: Hybrid fallback structure.
-      // If the user already has a default auto-created org_id (typically set during handle_new_user session creation),
-      // we only need to UPDATE that organization rather than trying to insert a new one which is blocked by RLS locally.
-      if (profileObj?.org_id) {
-        const { error: updateOrgError } = await supabase
-          .from("organizations")
-          .update({
-            name: name.trim(),
-            province: province,
-            city: city.trim(),
-            address: address.trim(),
-          })
-          .eq("id", profileObj.org_id);
-
-        if (!updateOrgError) {
-          return; // Successfully updated the organization and bypassing RLS blocks
-        }
-      }
-
-      // PLAN B: If there's no pre-defined org_id on the active user profile (or update failed),
-      // we invoke the safe 'create_my_organization' RPC of Supabase.
-      // RPC uses SECURITY DEFINER in PostgreSQL which bypasses RLS policies entirely.
+      // Single source of truth for organization creation.
+      // `create_my_organization` is a SECURITY DEFINER RPC: it runs with elevated
+      // privileges, bypasses RLS entirely, and atomically:
+      //   1. creates the organization row (owner_id = auth.uid())
+      //   2. sets the caller's profile: org_id, is_owner = true, is_purchaser = true
+      // Because it's a single trusted server-side transaction, it never triggers
+      // the client-side `prevent_role_self_escalation` guard the way a direct
+      // `update profiles` from the browser would. There is no need for — and no
+      // safe way to hand-roll — a client-side fallback that sets is_owner/is_purchaser
+      // itself; doing so either gets blocked by RLS or (if it succeeds) leaves the
+      // profile without owner/purchaser flags, which is the bug this used to have.
       const { error: rpcError } = await supabase.rpc("create_my_organization" as never, {
         _name: name.trim(),
         _province: province,
@@ -74,39 +51,9 @@ export function CreateOrganization() {
         _address: address.trim(),
       });
 
-      if (!rpcError) {
-        return; // RPC successfully ran without trigger issues!
+      if (rpcError) {
+        throw new Error(`خطا در ساخت رستوران: ${rpcError.message}`);
       }
-
-      // PLAN C: Edge Fallback (Direct secure insertion)
-      // If RPC is blocked by an un-synced trigger on the remote server, we fall back to manual insertion.
-      const { data: orgData, error: orgError } = await supabase
-        .from("organizations")
-        .insert({
-          name: name.trim(),
-          owner_id: userData.user.id,
-          province: province,
-          city: city.trim(),
-          address: address.trim(),
-        })
-        .select("id")
-        .single();
-
-      if (orgError) {
-        throw new Error(
-          `خطا در ثبت اطلاعات: دیتابیس لوکال فاقد هماهنگی نهایی است. متن خطا: ${orgError.message}`
-        );
-      }
-
-      const { error: profileError } = await supabase
-        .from("profiles")
-        .update({
-          org_id: orgData.id,
-          department_id: null,
-        })
-        .eq("id", userData.user.id);
-
-      if (profileError) throw new Error(`خطا در به‌روزرسانی نهایی پروفایل: ${profileError.message}`);
     },
     onSuccess: () => {
       toast.success("رستوران شما ساخته شد");
