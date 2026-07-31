@@ -9,8 +9,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Trash2, Plus, Pencil, Check, X } from "lucide-react";
 import { toast } from "sonner";
+import { Trash2, Plus, Pencil, Check, X, ChevronUp, ChevronDown } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   component: SettingsPage,
@@ -20,7 +20,7 @@ type Profile = { id: string; org_id: string; is_owner: boolean };
 type Dept = { id: string; name: string };
 type Staff = { id: string; full_name: string | null; email: string; department_id: string | null; is_owner: boolean; is_purchaser: boolean };
 type Invite = { id: string; email: string; department_id: string | null; is_purchaser: boolean };
-type Item = { id: string; name: string; unit: string; department_id: string };
+type Item = { id: string; name: string; unit: string; department_id: string; sort_order: number };
 
 function SettingsPage() {
   const qc = useQueryClient();
@@ -293,7 +293,6 @@ function StaffPanel({ depts, staff, invites, orgId, meId, qc }: {
     </div>
   );
 }
-
 function CatalogPanel({ depts, orgId }: { depts: Dept[]; orgId: string }) {
   const qc = useQueryClient();
   const [deptId, setDeptId] = useState<string>(depts[0]?.id || "");
@@ -303,7 +302,7 @@ function CatalogPanel({ depts, orgId }: { depts: Dept[]; orgId: string }) {
     queryKey: ["catalog-all", current],
     enabled: !!current,
     queryFn: async (): Promise<Item[]> => {
-      const { data } = await supabase.from("catalog_items").select("*").eq("department_id", current).order("name");
+      const { data } = await supabase.from("catalog_items").select("*").eq("department_id", current).order("sort_order", { ascending: true });
       return (data ?? []) as Item[];
     },
   });
@@ -314,8 +313,10 @@ function CatalogPanel({ depts, orgId }: { depts: Dept[]; orgId: string }) {
   const add = useMutation({
     mutationFn: async () => {
       if (!name.trim() || !unit.trim() || !current) throw new Error("اطلاعات ناقص");
+      const nextOrder = items.length ? Math.max(...items.map((i) => i.sort_order)) + 1 : 1;
       const { error } = await supabase.from("catalog_items").insert({
         org_id: orgId, department_id: current, name: name.trim(), unit: unit.trim(),
+        sort_order: nextOrder,
       });
       if (error) throw error;
     },
@@ -347,6 +348,39 @@ function CatalogPanel({ depts, orgId }: { depts: Dept[]; orgId: string }) {
       toast.success("ذخیره شد");
     },
     onError: (e: any) => toast.error(e.message),
+  });
+
+    const move = useMutation({
+    mutationFn: async ({ id, direction }: { id: string; direction: "up" | "down" }) => {
+      const idx = items.findIndex((i) => i.id === id);
+      const swapIdx = direction === "up" ? idx - 1 : idx + 1;
+      if (idx < 0 || swapIdx < 0 || swapIdx >= items.length) return;
+      const a = items[idx];
+      const b = items[swapIdx];
+      const { error: e1 } = await supabase.from("catalog_items").update({ sort_order: b.sort_order }).eq("id", a.id);
+      if (e1) throw e1;
+      const { error: e2 } = await supabase.from("catalog_items").update({ sort_order: a.sort_order }).eq("id", b.id);
+      if (e2) throw e2;
+    },
+    onMutate: async ({ id, direction }) => {
+      await qc.cancelQueries({ queryKey: ["catalog-all", current] });
+      const previous = qc.getQueryData<Item[]>(["catalog-all", current]);
+      if (previous) {
+        const idx = previous.findIndex((i) => i.id === id);
+        const swapIdx = direction === "up" ? idx - 1 : idx + 1;
+        if (idx >= 0 && swapIdx >= 0 && swapIdx < previous.length) {
+          const next = [...previous];
+          [next[idx], next[swapIdx]] = [next[swapIdx], next[idx]];
+          qc.setQueryData(["catalog-all", current], next);
+        }
+      }
+      return { previous };
+    },
+    onError: (e: any, _vars, ctx) => {
+      if (ctx?.previous) qc.setQueryData(["catalog-all", current], ctx.previous);
+      toast.error(e.message);
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: ["catalog-all", current] }),
   });
 
   if (depts.length === 0) {
@@ -381,7 +415,7 @@ function CatalogPanel({ depts, orgId }: { depts: Dept[]; orgId: string }) {
         <p className="text-sm text-muted-foreground text-center py-6">کاتالوگ این بخش خالی است</p>
       ) : (
         <ul className="divide-y">
-          {items.map(i => (
+          {items.map((i, idx) => (
             <li key={i.id} className="py-2 flex items-center gap-3">
               {editingId === i.id ? (
                 <>
@@ -396,6 +430,24 @@ function CatalogPanel({ depts, orgId }: { depts: Dept[]; orgId: string }) {
                 </>
               ) : (
                 <>
+                  <div className="flex flex-col -my-1 shrink-0">
+                    <Button
+                      size="icon" variant="ghost" className="h-6 w-6"
+                      disabled={idx === 0 || move.isPending}
+                      onClick={() => move.mutate({ id: i.id, direction: "up" })}
+                      aria-label="جابجایی به بالا"
+                    >
+                      <ChevronUp className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="icon" variant="ghost" className="h-6 w-6"
+                      disabled={idx === items.length - 1 || move.isPending}
+                      onClick={() => move.mutate({ id: i.id, direction: "down" })}
+                      aria-label="جابجایی به پایین"
+                    >
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </div>
                   <span className="flex-1">{i.name}</span>
                   <span className="text-sm text-muted-foreground">{i.unit}</span>
                   <Button size="icon" variant="ghost" onClick={() => {
