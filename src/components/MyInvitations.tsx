@@ -7,6 +7,8 @@ import { toast } from "sonner";
 
 type InviteForMe = {
   id: string;
+  email: string;
+  identifier_type: "email" | "phone" | "username";
   is_purchaser: boolean;
   invited_by_name: string | null;
   organizations: { name: string } | null;
@@ -20,13 +22,42 @@ export function MyInvitations() {
     queryKey: ["my-invitations"],
     queryFn: async (): Promise<InviteForMe[]> => {
       const { data: u } = await supabase.auth.getUser();
-      if (!u.user?.email) return [];
-      const { data, error } = await supabase
-        .from("invitations")
-        .select("id, is_purchaser, invited_by_name, organizations(name), departments(name)")
-        .ilike("email", u.user.email);
-      if (error) return [];
-      return (data ?? []) as unknown as InviteForMe[];
+      if (!u.user) return [];
+      const { data: me } = await supabase
+        .from("profiles")
+        .select("email,phone,username")
+        .eq("id", u.user.id)
+        .maybeSingle();
+      if (!me) return [];
+
+      const results: InviteForMe[] = [];
+      const selectCols = "id, email, identifier_type, is_purchaser, invited_by_name, organizations(name), departments(name)";
+
+      if (me.email) {
+        const { data } = await supabase
+          .from("invitations")
+          .select(selectCols)
+          .eq("identifier_type", "email")
+          .ilike("email", me.email);
+        if (data) results.push(...(data as unknown as InviteForMe[]));
+      }
+      if (me.phone) {
+        const { data } = await supabase
+          .from("invitations")
+          .select(selectCols)
+          .eq("identifier_type", "phone")
+          .eq("email", me.phone);
+        if (data) results.push(...(data as unknown as InviteForMe[]));
+      }
+      if (me.username) {
+        const { data } = await supabase
+          .from("invitations")
+          .select(selectCols)
+          .eq("identifier_type", "username")
+          .ilike("email", me.username);
+        if (data) results.push(...(data as unknown as InviteForMe[]));
+      }
+      return results;
     },
   });
 

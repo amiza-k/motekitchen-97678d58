@@ -23,7 +23,9 @@ export type ProfileData = {
   id: string;
   org_id: string;
   full_name: string | null;
-  email: string;
+  email: string | null;
+  phone: string | null;
+  username: string | null;
   department_id: string | null;
   is_owner: boolean;
   is_purchaser: boolean;
