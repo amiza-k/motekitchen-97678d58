@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, redirect, Link, useNavigate, useRouterState } 
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { LayoutList, ShoppingCart, History, Settings, LogOut, UtensilsCrossed, Menu, X, User } from "lucide-react";
+import { LayoutList, ShoppingCart, History, Settings, LogOut, UtensilsCrossed, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -23,7 +23,9 @@ export type ProfileData = {
   id: string;
   org_id: string;
   full_name: string | null;
-  email: string;
+  email: string | null;
+  phone: string | null;
+  username: string | null;
   department_id: string | null;
   is_owner: boolean;
   is_purchaser: boolean;
@@ -35,7 +37,6 @@ function AuthLayout() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ["me"],
@@ -51,8 +52,6 @@ function AuthLayout() {
       return data as ProfileData | null;
     },
   });
-
-  useEffect(() => { setMobileOpen(false); }, [pathname]);
 
   const signOut = async () => {
     await qc.cancelQueries();
@@ -80,9 +79,6 @@ function AuthLayout() {
       <header className="border-b bg-card sticky top-0 z-30">
         <div className="mx-auto max-w-7xl px-4 h-14 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 min-w-0">
-            <button className="md:hidden -mr-2 p-2" onClick={() => setMobileOpen(v => !v)} aria-label="menu">
-              {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
             <UtensilsCrossed className="h-5 w-5 text-primary shrink-0" />
             <span className="font-bold text-primary">MoteKitchen</span>
             {profile.organizations?.name && (
@@ -123,23 +119,40 @@ function AuthLayout() {
             </Button>
           </div>
         </div>
-        {mobileOpen && (
-          <nav className="md:hidden border-t bg-card px-2 py-2 flex flex-col gap-1">
-            {nav.map(item => (
-              <Link key={item.to} to={item.to} className={cn(
-                "px-3 py-2 rounded-md text-sm flex items-center gap-2 hover:bg-accent",
-                pathname.startsWith(item.to) && "bg-accent text-accent-foreground font-medium"
-              )}>
-                <item.icon className="h-4 w-4" />{item.label}
-              </Link>
-            ))}
-          </nav>
-        )}
       </header>
-      <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-6">
+
+      <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-6 pb-24 md:pb-6">
         <MyInvitations />
         {profile.org_id ? <Outlet /> : <CreateOrganization />}
       </main>
+
+      {nav.length > 0 && (
+        <nav className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-around border-t bg-card/95 backdrop-blur px-1 py-2 md:hidden [padding-bottom:calc(env(safe-area-inset-bottom)+0.5rem)]">
+          {nav.map((item) => {
+            const active = pathname.startsWith(item.to);
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                className={cn(
+                  "flex flex-1 flex-col items-center gap-1 rounded-lg py-1 text-[10.5px] font-medium transition-colors",
+                  active ? "text-primary" : "text-muted-foreground",
+                )}
+              >
+                <span
+                  className={cn(
+                    "grid h-9 w-9 place-items-center rounded-full transition-colors",
+                    active && "bg-primary/10",
+                  )}
+                >
+                  <item.icon className="h-5 w-5" />
+                </span>
+                <span className="max-w-[4.2rem] truncate">{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+      )}
     </div>
   );
 }

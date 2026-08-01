@@ -9,8 +9,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Trash2, Plus, Pencil, Check, X } from "lucide-react";
 import { toast } from "sonner";
+import { Trash2, Plus, Pencil, Check, X, ChevronUp, ChevronDown } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   component: SettingsPage,
@@ -19,8 +19,11 @@ export const Route = createFileRoute("/_authenticated/settings")({
 type Profile = { id: string; org_id: string; is_owner: boolean };
 type Dept = { id: string; name: string };
 type Staff = { id: string; full_name: string | null; email: string; department_id: string | null; is_owner: boolean; is_purchaser: boolean };
-type Invite = { id: string; email: string; department_id: string | null; is_purchaser: boolean };
-type Item = { id: string; name: string; unit: string; department_id: string };
+type Invite = {
+  id: string; email: string; department_id: string | null; is_purchaser: boolean;
+  identifier_type: "email" | "phone" | "username";
+};
+type Item = { id: string; name: string; unit: string; department_id: string; sort_order: number };
 
 function SettingsPage() {
   const qc = useQueryClient();
@@ -55,7 +58,7 @@ function SettingsPage() {
     enabled: !!profile?.org_id,
     queryFn: async (): Promise<Invite[]> => {
       const { data } = await supabase.from("invitations")
-        .select("id,email,department_id,is_purchaser")
+        .select("id,email,department_id,is_purchaser,identifier_type")
         .eq("org_id", profile!.org_id)
         .order("created_at", { ascending: false });
       return (data ?? []) as Invite[];
@@ -165,17 +168,43 @@ function DepartmentsPanel({ depts, orgId }: { depts: Dept[]; orgId: string }) {
 function StaffPanel({ depts, staff, invites, orgId, meId, qc }: {
   depts: Dept[]; staff: Staff[]; invites: Invite[]; orgId: string; meId: string; qc: ReturnType<typeof useQueryClient>;
 }) {
-  const [email, setEmail] = useState("");
+  const [identifierType, setIdentifierType] = useState<"email" | "phone" | "username">("email");
+  const [identifierValue, setIdentifierValue] = useState("");
   const [deptId, setDeptId] = useState("");
   const [isPurchaser, setIsPurchaser] = useState(false);
 
   const me = staff.find(s => s.id === meId);
 
+  const identifierMeta = {
+    email: { label: "ایمیل", placeholder: "user@example.com", type: "email" as const },
+    phone: { label: "شماره تماس", placeholder: "09xxxxxxxxx", type: "text" as const },
+    username: { label: "یوزرنیم", placeholder: "مثلاً amir_reza", type: "text" as const },
+  }[identifierType];
+
   const invite = useMutation({
     mutationFn: async () => {
-      if (!email.trim() || !deptId) throw new Error("ایمیل و بخش را وارد کنید");
+      const raw = identifierValue.trim();
+      if (!raw || !deptId) throw new Error("مشخصات کاربر و بخش را وارد کنید");
+
+      let normalized = raw;
+      if (identifierType === "email") {
+        normalized = raw.toLowerCase();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) throw new Error("ایمیل معتبر نیست");
+      } else if (identifierType === "phone") {
+        normalized = raw.replace(/[۰-۹٠-٩]/g, (d) => {
+          const p = "۰۱۲۳۴۵۶۷۸۹".indexOf(d);
+          if (p > -1) return String(p);
+          const a = "٠١٢٣٤٥٦٧٨٩".indexOf(d);
+          return a > -1 ? String(a) : d;
+        });
+        if (!/^09\d{9}$/.test(normalized)) throw new Error("شماره همراه باید با 09 شروع شود و ۱۱ رقم باشد");
+      } else {
+        normalized = raw;
+        if (!/^[a-zA-Z0-9_]{3,20}$/.test(normalized)) throw new Error("یوزرنیم باید ۳ تا ۲۰ کاراکتر و فقط شامل حروف انگلیسی، عدد و _ باشد");
+      }
+
       const { error } = await supabase.from("invitations").insert({
-        org_id: orgId, email: email.trim().toLowerCase(),
+        org_id: orgId, email: normalized, identifier_type: identifierType,
         department_id: deptId, is_purchaser: isPurchaser,
         invited_by: meId,
         invited_by_name: me?.full_name || me?.email || null,
@@ -184,8 +213,8 @@ function StaffPanel({ depts, staff, invites, orgId, meId, qc }: {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["invites"] });
-      setEmail(""); setDeptId(""); setIsPurchaser(false);
-      toast.success("دعوت‌نامه ثبت شد. کاربر با همین ایمیل ثبت‌نام کند.");
+      setIdentifierValue(""); setDeptId(""); setIsPurchaser(false);
+      toast.success("دعوت‌نامه ثبت شد.");
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -205,14 +234,35 @@ function StaffPanel({ depts, staff, invites, orgId, meId, qc }: {
     onError: (e: any) => toast.error(e.message),
   });
 
+  const identifierTypeLabel = (t: Invite["identifier_type"]) =>
+    t === "email" ? "ایمیل" : t === "phone" ? "شماره" : "یوزرنیم";
+
   return (
     <div className="space-y-4">
       <Card className="p-4 space-y-3">
         <h3 className="font-semibold">دعوت کاربر جدید</h3>
-        <div className="grid gap-3 md:grid-cols-4">
+        <div className="grid gap-3 md:grid-cols-5">
+          <div>
+            <Label>نوع شناسه</Label>
+            <Select value={identifierType} onValueChange={(v: any) => { setIdentifierType(v); setIdentifierValue(""); }}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="email">ایمیل</SelectItem>
+                <SelectItem value="phone">شماره تماس</SelectItem>
+                <SelectItem value="username">یوزرنیم</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="md:col-span-2">
-            <Label>ایمیل</Label>
-            <Input dir="ltr" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="user@example.com" />
+            <Label>{identifierMeta.label}</Label>
+            <Input
+              dir="ltr"
+              type={identifierMeta.type}
+              value={identifierValue}
+              onChange={e => setIdentifierValue(e.target.value)}
+              placeholder={identifierMeta.placeholder}
+              maxLength={identifierType === "phone" ? 11 : undefined}
+            />
           </div>
           <div>
             <Label>بخش</Label>
@@ -234,7 +284,9 @@ function StaffPanel({ depts, staff, invites, orgId, meId, qc }: {
           <Button onClick={() => invite.mutate()} disabled={invite.isPending}>ارسال دعوت</Button>
         </div>
         <p className="text-xs text-muted-foreground">
-          کاربر باید با همین ایمیل در صفحه ثبت‌نام حساب بسازد؛ به‌طور خودکار به بخش و رستوران شما اضافه می‌شود.
+          {identifierType === "username"
+            ? "کاربری که این یوزرنیم را در پروفایل خود ثبت کرده باشد، دعوت را در بخش «دعوت‌های من» می‌بیند و می‌تواند دستی بپذیرد."
+            : "اگر کاربر هنوز حساب نساخته، با همین مشخصات ثبت‌نام کند تا خودکار به بخش و رستوران شما اضافه شود؛ اگر از قبل حساب دارد، دعوت را در «دعوت‌های من» می‌بیند."}
         </p>
       </Card>
 
@@ -244,6 +296,7 @@ function StaffPanel({ depts, staff, invites, orgId, meId, qc }: {
           <ul className="divide-y">
             {invites.map(i => (
               <li key={i.id} className="py-2 flex items-center gap-3">
+                <span className="text-xs bg-muted px-2 py-0.5 rounded shrink-0">{identifierTypeLabel(i.identifier_type)}</span>
                 <span className="flex-1" dir="ltr">{i.email}</span>
                 <span className="text-sm text-muted-foreground">
                   {depts.find(d => d.id === i.department_id)?.name || "—"}
@@ -303,7 +356,7 @@ function CatalogPanel({ depts, orgId }: { depts: Dept[]; orgId: string }) {
     queryKey: ["catalog-all", current],
     enabled: !!current,
     queryFn: async (): Promise<Item[]> => {
-      const { data } = await supabase.from("catalog_items").select("*").eq("department_id", current).order("name");
+      const { data } = await supabase.from("catalog_items").select("*").eq("department_id", current).order("sort_order", { ascending: true });
       return (data ?? []) as Item[];
     },
   });
@@ -314,8 +367,10 @@ function CatalogPanel({ depts, orgId }: { depts: Dept[]; orgId: string }) {
   const add = useMutation({
     mutationFn: async () => {
       if (!name.trim() || !unit.trim() || !current) throw new Error("اطلاعات ناقص");
+      const nextOrder = items.length ? Math.max(...items.map((i) => i.sort_order)) + 1 : 1;
       const { error } = await supabase.from("catalog_items").insert({
         org_id: orgId, department_id: current, name: name.trim(), unit: unit.trim(),
+        sort_order: nextOrder,
       });
       if (error) throw error;
     },
@@ -347,6 +402,39 @@ function CatalogPanel({ depts, orgId }: { depts: Dept[]; orgId: string }) {
       toast.success("ذخیره شد");
     },
     onError: (e: any) => toast.error(e.message),
+  });
+
+    const move = useMutation({
+    mutationFn: async ({ id, direction }: { id: string; direction: "up" | "down" }) => {
+      const idx = items.findIndex((i) => i.id === id);
+      const swapIdx = direction === "up" ? idx - 1 : idx + 1;
+      if (idx < 0 || swapIdx < 0 || swapIdx >= items.length) return;
+      const a = items[idx];
+      const b = items[swapIdx];
+      const { error: e1 } = await supabase.from("catalog_items").update({ sort_order: b.sort_order }).eq("id", a.id);
+      if (e1) throw e1;
+      const { error: e2 } = await supabase.from("catalog_items").update({ sort_order: a.sort_order }).eq("id", b.id);
+      if (e2) throw e2;
+    },
+    onMutate: async ({ id, direction }) => {
+      await qc.cancelQueries({ queryKey: ["catalog-all", current] });
+      const previous = qc.getQueryData<Item[]>(["catalog-all", current]);
+      if (previous) {
+        const idx = previous.findIndex((i) => i.id === id);
+        const swapIdx = direction === "up" ? idx - 1 : idx + 1;
+        if (idx >= 0 && swapIdx >= 0 && swapIdx < previous.length) {
+          const next = [...previous];
+          [next[idx], next[swapIdx]] = [next[swapIdx], next[idx]];
+          qc.setQueryData(["catalog-all", current], next);
+        }
+      }
+      return { previous };
+    },
+    onError: (e: any, _vars, ctx) => {
+      if (ctx?.previous) qc.setQueryData(["catalog-all", current], ctx.previous);
+      toast.error(e.message);
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: ["catalog-all", current] }),
   });
 
   if (depts.length === 0) {
@@ -381,7 +469,7 @@ function CatalogPanel({ depts, orgId }: { depts: Dept[]; orgId: string }) {
         <p className="text-sm text-muted-foreground text-center py-6">کاتالوگ این بخش خالی است</p>
       ) : (
         <ul className="divide-y">
-          {items.map(i => (
+          {items.map((i, idx) => (
             <li key={i.id} className="py-2 flex items-center gap-3">
               {editingId === i.id ? (
                 <>
@@ -396,6 +484,24 @@ function CatalogPanel({ depts, orgId }: { depts: Dept[]; orgId: string }) {
                 </>
               ) : (
                 <>
+                  <div className="flex flex-col -my-1 shrink-0">
+                    <Button
+                      size="icon" variant="ghost" className="h-6 w-6"
+                      disabled={idx === 0 || move.isPending}
+                      onClick={() => move.mutate({ id: i.id, direction: "up" })}
+                      aria-label="جابجایی به بالا"
+                    >
+                      <ChevronUp className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="icon" variant="ghost" className="h-6 w-6"
+                      disabled={idx === items.length - 1 || move.isPending}
+                      onClick={() => move.mutate({ id: i.id, direction: "down" })}
+                      aria-label="جابجایی به پایین"
+                    >
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </div>
                   <span className="flex-1">{i.name}</span>
                   <span className="text-sm text-muted-foreground">{i.unit}</span>
                   <Button size="icon" variant="ghost" onClick={() => {
