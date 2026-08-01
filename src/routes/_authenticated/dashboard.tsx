@@ -226,7 +226,7 @@ function DepartmentBoard({ profile }: { profile: Profile }) {
     queryKey: ["catalog", deptId],
     queryFn: async (): Promise<CatalogItem[]> => {
       const { data, error } = await supabase.from("catalog_items")
-        .select("id,name,unit").eq("department_id", deptId).order("name");
+        .select("id,name,unit").eq("department_id", deptId).order("sort_order", { ascending: true });
       if (error) throw error;
       return (data ?? []) as CatalogItem[];
     },

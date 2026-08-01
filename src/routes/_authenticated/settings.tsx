@@ -346,7 +346,6 @@ function StaffPanel({ depts, staff, invites, orgId, meId, qc }: {
     </div>
   );
 }
-
 function CatalogPanel({ depts, orgId }: { depts: Dept[]; orgId: string }) {
   const qc = useQueryClient();
   const [deptId, setDeptId] = useState<string>(depts[0]?.id || "");
