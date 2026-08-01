@@ -11,11 +11,17 @@ import { LogOut, Save, User } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
 import type { ProfileData } from "./route";
+import { EMAIL_REGEX, PHONE_REGEX, USERNAME_REGEX, toEnglishDigits } from "@/lib/phone-auth";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   ssr: false,
   component: ProfilePage,
 });
+
+function uniqueViolationMessage(error: any, fallback: string) {
+  if (error?.code === "23505") return fallback;
+  return error?.message ?? fallback;
+}
 
 function ProfilePage() {
   const qc = useQueryClient();
@@ -27,7 +33,16 @@ function ProfilePage() {
   const [name, setName] = useState("");
   useEffect(() => { if (profile?.full_name) setName(profile.full_name); }, [profile?.full_name]);
 
-  const save = useMutation({
+  const [usernameInput, setUsernameInput] = useState("");
+  useEffect(() => { setUsernameInput(profile?.username ?? ""); }, [profile?.username]);
+
+  const [phoneInput, setPhoneInput] = useState("");
+  useEffect(() => { setPhoneInput(profile?.phone ?? ""); }, [profile?.phone]);
+
+  const [emailInput, setEmailInput] = useState("");
+  useEffect(() => { setEmailInput(profile?.email ?? ""); }, [profile?.email]);
+
+  const saveName = useMutation({
     mutationFn: async () => {
       if (!profile) return;
       const { error } = await supabase
@@ -38,6 +53,57 @@ function ProfilePage() {
     },
     onSuccess: () => {
       toast.success("نام با موفقیت ذخیره شد");
+      qc.invalidateQueries({ queryKey: ["me"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const saveUsername = useMutation({
+    mutationFn: async () => {
+      if (!profile) return;
+      const trimmed = usernameInput.trim();
+      if (!USERNAME_REGEX.test(trimmed)) {
+        throw new Error("یوزرنیم باید ۳ تا ۲۰ کاراکتر و فقط شامل حروف انگلیسی، عدد و _ باشد");
+      }
+      const { error } = await supabase.from("profiles").update({ username: trimmed }).eq("id", profile.id);
+      if (error) throw new Error(uniqueViolationMessage(error, "این یوزرنیم قبلاً استفاده شده است"));
+    },
+    onSuccess: () => {
+      toast.success("یوزرنیم با موفقیت ذخیره شد");
+      qc.invalidateQueries({ queryKey: ["me"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const savePhone = useMutation({
+    mutationFn: async () => {
+      if (!profile) return;
+      const digits = toEnglishDigits(phoneInput.trim());
+      if (!PHONE_REGEX.test(digits)) {
+        throw new Error("شماره همراه باید با 09 شروع شود و ۱۱ رقم باشد");
+      }
+      const { error } = await supabase.from("profiles").update({ phone: digits }).eq("id", profile.id);
+      if (error) throw new Error(uniqueViolationMessage(error, "این شماره همراه قبلاً ثبت شده است"));
+    },
+    onSuccess: () => {
+      toast.success("شماره همراه با موفقیت ذخیره شد");
+      qc.invalidateQueries({ queryKey: ["me"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const saveEmail = useMutation({
+    mutationFn: async () => {
+      if (!profile) return;
+      const trimmed = emailInput.trim();
+      if (!EMAIL_REGEX.test(trimmed)) {
+        throw new Error("یک ایمیل معتبر وارد کنید");
+      }
+      const { error } = await supabase.from("profiles").update({ email: trimmed }).eq("id", profile.id);
+      if (error) throw new Error(uniqueViolationMessage(error, "این ایمیل قبلاً برای حساب دیگری ثبت شده است"));
+    },
+    onSuccess: () => {
+      toast.success("ایمیل با موفقیت ذخیره شد");
       qc.invalidateQueries({ queryKey: ["me"] });
     },
     onError: (e: Error) => toast.error(e.message),
@@ -71,14 +137,51 @@ function ProfilePage() {
         <CardHeader><CardTitle className="text-base">اطلاعات حساب</CardTitle></CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">ایمیل</Label>
-            <Input id="email" value={profile.email} disabled />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="name">نام نمایشی</Label>
+            <Label htmlFor="name">نام</Label>
             <div className="flex gap-2">
               <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="نام و نام خانوادگی" />
-              <Button onClick={() => save.mutate()} disabled={save.isPending || name === (profile.full_name ?? "")}>
+              <Button onClick={() => saveName.mutate()} disabled={saveName.isPending || name === (profile.full_name ?? "")}>
+                <Save className="h-4 w-4 ml-1" /> ذخیره
+              </Button>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="username">یوزرنیم</Label>
+            <div className="flex gap-2">
+              <Input id="username" value={usernameInput} onChange={(e) => setUsernameInput(e.target.value)} dir="ltr" placeholder="مثلاً amir_reza" />
+              <Button onClick={() => saveUsername.mutate()} disabled={saveUsername.isPending || usernameInput.trim() === (profile.username ?? "")}>
+                <Save className="h-4 w-4 ml-1" /> ذخیره
+              </Button>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="email">ایمیل</Label>
+            <div className="flex gap-2">
+              <Input
+                id="email"
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
+                dir="ltr"
+                placeholder="ایمیل خود را وارد کنید"
+              />
+              <Button onClick={() => saveEmail.mutate()} disabled={saveEmail.isPending || emailInput.trim() === (profile.email ?? "")}>
+                <Save className="h-4 w-4 ml-1" /> ذخیره
+              </Button>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="phone">شماره تماس</Label>
+            <div className="flex gap-2">
+              <Input
+                id="phone"
+                value={phoneInput}
+                onChange={(e) => setPhoneInput(e.target.value)}
+                dir="ltr"
+                inputMode="numeric"
+                maxLength={11}
+                placeholder="09xxxxxxxxx"
+              />
+              <Button onClick={() => savePhone.mutate()} disabled={savePhone.isPending || phoneInput.trim() === (profile.phone ?? "")}>
                 <Save className="h-4 w-4 ml-1" /> ذخیره
               </Button>
             </div>
