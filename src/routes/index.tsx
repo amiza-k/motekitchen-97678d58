@@ -13,6 +13,12 @@ import {
   AlarmClock,
   HelpCircle,
   Clock,
+  Mail,
+  Phone,
+  MapPin,
+  Instagram,
+  Send,
+  ChevronDown,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -49,6 +55,7 @@ function Landing() {
       <Problems />
       <Solution />
       <Trust />
+      <FAQ />
       <FinalCTA />
       <SiteFooter />
     </div>
@@ -264,6 +271,53 @@ function Trust() {
   );
 }
 
+function FAQ() {
+  const faqs = [
+    {
+      q: "آیا برای استفاده از MoteKitchen باید چیزی نصب کنم؟",
+      a: "خیر. MoteKitchen کاملاً تحت وب است و از مرورگر گوشی یا کامپیوتر در دسترس است؛ نیازی به نصب اپلیکیشن نیست.",
+    },
+    {
+      q: "استفاده از آن هزینه دارد؟",
+      a: "در حال حاضر MoteKitchen در نسخه آزمایشی (Beta) و رایگان است. هرگونه تغییر در قیمت‌گذاری از قبل اطلاع‌رسانی خواهد شد.",
+    },
+    {
+      q: "چند نفر می‌توانند هم‌زمان از سیستم استفاده کنند؟",
+      a: "هر بخش رستوران (مثل آشپزخانه، بار، سالن) می‌تواند چند نفر پرسنل داشته باشد و همه به‌صورت هم‌زمان لیست خرید مشترک آن بخش را ببینند و ویرایش کنند.",
+    },
+    {
+      q: "مسئول خرید چطور از درخواست‌ها باخبر می‌شود؟",
+      a: "همه‌ی درخواست‌های ثبت‌شده در یک داشبورد مرکزی برای مسئول خرید نمایش داده می‌شود و نیازی به تماس یا پیام جداگانه نیست.",
+    },
+    {
+      q: "اطلاعات رستوران من کجا نگهداری می‌شود؟",
+      a: "داده‌های شما در زیرساخت ابری امن نگهداری می‌شود. برای جزئیات بیشتر به زودی صفحه‌ی حریم خصوصی منتشر خواهد شد.",
+    },
+  ];
+
+  return (
+    <section className="border-t">
+      <div className="mx-auto max-w-3xl px-4 py-16 md:py-24">
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">سوالات متداول</h2>
+        <div className="space-y-3">
+          {faqs.map((item, i) => (
+            <details
+              key={i}
+              className="group rounded-lg border bg-card px-4 py-3 [&_summary::-webkit-details-marker]:hidden"
+            >
+              <summary className="flex cursor-pointer items-center justify-between gap-3 font-medium text-sm md:text-base list-none">
+                {item.q}
+                <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" />
+              </summary>
+              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{item.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function FinalCTA() {
   return (
     <section className="border-t">
@@ -288,14 +342,71 @@ function FinalCTA() {
 }
 
 function SiteFooter() {
+  const contacts = [
+    { icon: Mail, label: "motekitchen.app@gmail.com", href: "mailto:motekitchen.app@gmail.com" },
+    { icon: Phone, label: "۰۹۰۲۷۹۷۰۷۴۸", href: "tel:+989027970748" },
+    { icon: Instagram, label: "amiza_k_@", href: "https://instagram.com/amiza_k_" },
+    { icon: Send, label: "t.me/amiza_k", href: "https://t.me/amiza_k" },
+  ];
+
   return (
     <footer className="border-t bg-card">
-      <div className="mx-auto max-w-6xl px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted-foreground">
-        <div className="flex items-center gap-2 text-primary">
-          <UtensilsCrossed className="h-4 w-4" />
-          <span className="font-semibold">MoteKitchen</span>
+      <div className="mx-auto max-w-6xl px-4 py-10">
+        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+          <div>
+            <div className="flex items-center gap-2 text-primary">
+              <UtensilsCrossed className="h-5 w-5" />
+              <span className="font-bold">MoteKitchen</span>
+            </div>
+            <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+              سامانه ثبت و مدیریت درخواست‌های خرید داخلی رستوران‌ها و کافه‌ها.
+            </p>
+            <p className="mt-3 flex items-start gap-1.5 text-sm text-muted-foreground">
+              <MapPin className="h-4 w-4 mt-0.5 shrink-0" />
+              ایران، استان فارس، شیراز
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-semibold mb-3">راه‌های ارتباطی</h3>
+            <ul className="space-y-2">
+              {contacts.map((c, i) => (
+                <li key={i}>
+                  <a
+                    href={c.href}
+                    target={c.href.startsWith("http") ? "_blank" : undefined}
+                    rel={c.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                    dir="ltr"
+                  >
+                    <c.icon className="h-4 w-4 shrink-0" />
+                    <span className="text-right" dir="rtl">{c.label}</span>
+                  </a>
+                </li>
+              ))}
+            </ul> {/* <-- این تگ بسته شدن ul جا افتاده بود */}
+          </div>
+
+          <div>
+            <h3 className="text-sm font-semibold mb-3">اطلاعات بیشتر</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link to="/privacy" className="text-muted-foreground hover:text-primary transition-colors">
+                  حریم خصوصی
+                </Link>
+              </li>
+              <li>
+                <Link to="/auth" className="text-muted-foreground hover:text-primary transition-colors">
+                  ورود / ثبت‌نام
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div>© {toFa(new Date().getFullYear())} — تمامی حقوق محفوظ است.</div>
+
+        <div className="mt-8 pt-6 border-t text-center text-xs text-muted-foreground">
+          © {toFa(new Date().getFullYear())} MoteKitchen — تمامی حقوق محفوظ است.
+        </div>
       </div>
     </footer>
   );
