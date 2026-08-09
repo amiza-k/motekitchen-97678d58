@@ -21,6 +21,7 @@ export type Database = {
           id: string
           name: string
           org_id: string
+          sort_order: number
           unit: string
         }
         Insert: {
@@ -29,6 +30,7 @@ export type Database = {
           id?: string
           name: string
           org_id: string
+          sort_order?: number
           unit: string
         }
         Update: {
@@ -37,6 +39,7 @@ export type Database = {
           id?: string
           name?: string
           org_id?: string
+          sort_order?: number
           unit?: string
         }
         Relationships: [
@@ -91,6 +94,7 @@ export type Database = {
           department_id: string | null
           email: string
           id: string
+          identifier_type: string
           invited_by: string | null
           invited_by_name: string | null
           is_purchaser: boolean
@@ -101,6 +105,7 @@ export type Database = {
           department_id?: string | null
           email: string
           id?: string
+          identifier_type?: string
           invited_by?: string | null
           invited_by_name?: string | null
           is_purchaser?: boolean
@@ -111,6 +116,7 @@ export type Database = {
           department_id?: string | null
           email?: string
           id?: string
+          identifier_type?: string
           invited_by?: string | null
           invited_by_name?: string | null
           is_purchaser?: boolean
@@ -174,32 +180,38 @@ export type Database = {
         Row: {
           created_at: string
           department_id: string | null
-          email: string
+          email: string | null
           full_name: string | null
           id: string
           is_owner: boolean
           is_purchaser: boolean
           org_id: string | null
+          phone: string | null
+          username: string | null
         }
         Insert: {
           created_at?: string
           department_id?: string | null
-          email: string
+          email?: string | null
           full_name?: string | null
           id: string
           is_owner?: boolean
           is_purchaser?: boolean
           org_id?: string | null
+          phone?: string | null
+          username?: string | null
         }
         Update: {
           created_at?: string
           department_id?: string | null
-          email?: string
+          email?: string | null
           full_name?: string | null
           id?: string
           is_owner?: boolean
           is_purchaser?: boolean
           org_id?: string | null
+          phone?: string | null
+          username?: string | null
         }
         Relationships: [
           {
@@ -366,6 +378,7 @@ export type Database = {
         Args: { _invitation_id: string }
         Returns: undefined
       }
+      check_phone_availability: { Args: { _phone: string }; Returns: boolean }
       create_my_organization: {
         Args: {
           _address: string
@@ -379,6 +392,7 @@ export type Database = {
       current_is_owner: { Args: never; Returns: boolean }
       current_is_purchaser: { Args: never; Returns: boolean }
       current_org_id: { Args: never; Returns: string }
+      get_login_email: { Args: { _identifier: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never
