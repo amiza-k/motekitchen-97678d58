@@ -132,7 +132,7 @@ function PurchaserPage() {
             const list = grouped[d.id] || [];
             
             // 1. Calculate how many times each item name appears as "pending" under this department
-            const itemCounts = {};
+            const itemCounts: Record<string, number> = {};
             for (const t of list) {
               const nameKey = t.item_name.trim().toLowerCase();
               itemCounts[nameKey] = (itemCounts[nameKey] || 0) + 1;
