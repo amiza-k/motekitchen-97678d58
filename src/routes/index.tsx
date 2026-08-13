@@ -391,7 +391,7 @@ function SiteFooter() {
             <h3 className="text-sm font-semibold mb-3">اطلاعات بیشتر</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/privacy" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/" hash="privacy" className="text-muted-foreground hover:text-primary transition-colors">
                   حریم خصوصی
                 </Link>
               </li>
