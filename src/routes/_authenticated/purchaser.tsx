@@ -139,7 +139,7 @@ function PurchaserPage() {
             }
 
             // 2. Group pending requests by exact order_date
-            const batchesMap = {};
+            const batchesMap: Record<string, Task[]> = {};
             for (const t of list) {
               batchesMap[t.order_date] = batchesMap[t.order_date] || [];
               batchesMap[t.order_date].push(t);
