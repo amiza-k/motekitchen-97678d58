@@ -44,7 +44,7 @@ export function CreateOrganization() {
       // safe way to hand-roll — a client-side fallback that sets is_owner/is_purchaser
       // itself; doing so either gets blocked by RLS or (if it succeeds) leaves the
       // profile without owner/purchaser flags, which is the bug this used to have.
-      const { error: rpcError } = await supabase.rpc("create_my_organization" as never, {
+      const { error: rpcError } = await supabase.rpc("create_my_organization", {
         _name: name.trim(),
         _province: province,
         _city: city.trim(),
